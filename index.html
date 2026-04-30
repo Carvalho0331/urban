@@ -1,0 +1,2366 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>URBAN — Gestão de Instalações</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+/* ═══════════════════════════════════════════
+   RESET & VARIABLES — URBAN BRAND
+═══════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  /* Urban Brand Colors (from logo) */
+  --orange: #F5971A;
+  --orange-dark: #D97B0A;
+  --orange-light: #FFAB38;
+  --blue: #29ABE2;
+  --blue-dark: #1A8FC4;
+  --blue-light: #4FC3F7;
+
+  /* Dark backgrounds */
+  --black: #080c10;
+  --dark: #0d1117;
+  --steel: #141c25;
+  --mid: #1c2635;
+  --iron: #243040;
+  --slate: #7A94B0;
+  --silver: #b8cedd;
+  --white: #eef3f8;
+
+  /* Status */
+  --green: #2a9d60;
+
+  /* Fonts */
+  --font-display: 'Barlow Condensed', sans-serif;
+  --font-body: 'Barlow', sans-serif;
+
+  /* Layout */
+  --nav-h: 76px;
+  --section-pad: 100px 0;
+  --radius: 6px;
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Accent = Urban Orange primary */
+  --accent: var(--orange);
+  --accent2: var(--blue);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--black);
+  color: var(--silver);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ═══════════════════════════════════════════
+   SCROLLBAR
+═══════════════════════════════════════════ */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--dark); }
+::-webkit-scrollbar-thumb { background: var(--orange); border-radius: 3px; }
+
+/* ═══════════════════════════════════════════
+   UTILITY
+═══════════════════════════════════════════ */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+.section { padding: var(--section-pad); }
+.section-dark { background: var(--dark); }
+.section-mid { background: var(--steel); }
+
+.label {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--orange);
+  display: block;
+  margin-bottom: 12px;
+}
+.label-blue { color: var(--blue); }
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--white);
+  line-height: 0.95;
+  letter-spacing: -1px;
+}
+.section-title .o { color: var(--orange); }
+.section-title .b { color: var(--blue); }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 30px;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+  border-radius: var(--radius);
+  position: relative;
+  overflow: hidden;
+}
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.12);
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+}
+.btn:hover::after { transform: translateX(0); }
+
+.btn-primary { background: var(--orange); color: #fff; }
+.btn-primary:hover { background: var(--orange-dark); }
+.btn-blue { background: var(--blue); color: #fff; }
+.btn-blue:hover { background: var(--blue-dark); }
+.btn-outline { background: transparent; color: var(--white); border: 2px solid var(--orange); }
+.btn-outline:hover { background: var(--orange); color: #fff; }
+.btn-outline-blue { background: transparent; color: var(--white); border: 2px solid var(--blue); }
+.btn-outline-blue:hover { background: var(--blue); color: #fff; }
+.btn-small { padding: 10px 20px; font-size: 12px; }
+
+.page { display: none; }
+.page.active { display: block; }
+
+/* ═══════════════════════════════════════════
+   NAVBAR
+═══════════════════════════════════════════ */
+#navbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--nav-h);
+  z-index: 1000;
+  background: rgba(8,12,16,0.94);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(245,151,26,0.12);
+  transition: var(--transition);
+}
+#navbar.scrolled {
+  background: rgba(8,12,16,0.99);
+  border-bottom-color: rgba(245,151,26,0.35);
+  box-shadow: 0 4px 32px rgba(0,0,0,0.5);
+}
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+
+/* Logo */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  cursor: pointer;
+}
+.logo img {
+  height: 44px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* Nav Links */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  list-style: none;
+}
+.nav-links > li {
+  position: relative;
+}
+.nav-links > li > a {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--slate);
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: var(--radius);
+  transition: var(--transition);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.nav-links > li > a:hover,
+.nav-links > li > a.active {
+  color: var(--white);
+  background: rgba(245,151,26,0.10);
+}
+.nav-links > li > a.active { color: var(--orange); }
+.nav-links > li > a .fa-chevron-down {
+  font-size: 9px;
+  transition: transform 0.25s ease;
+}
+.nav-links > li:hover > a .fa-chevron-down { transform: rotate(180deg); }
+
+/* Dropdown */
+.dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 230px;
+  background: rgba(13,17,23,0.98);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(245,151,26,0.18);
+  border-radius: 8px;
+  padding: 8px 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: all 0.25s ease;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  z-index: 100;
+}
+.nav-links > li:hover .dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+.dropdown a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--slate);
+  text-decoration: none;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.dropdown a:hover { color: var(--orange); background: rgba(245,151,26,0.07); }
+.dropdown a i { width: 18px; color: var(--orange); font-size: 13px; }
+.dropdown-divider { height: 1px; background: rgba(255,255,255,0.06); margin: 4px 0; }
+
+.nav-cta { margin-left: 12px; }
+
+/* Hamburger */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 8px;
+  background: none;
+  border: none;
+}
+.hamburger span {
+  display: block;
+  width: 26px; height: 2px;
+  background: var(--white);
+  transition: var(--transition);
+}
+.hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
+
+/* Mobile Menu */
+.mobile-menu {
+  display: none;
+  position: fixed;
+  top: var(--nav-h);
+  left: 0; right: 0;
+  background: rgba(8,12,16,0.99);
+  backdrop-filter: blur(16px);
+  padding: 20px;
+  border-bottom: 1px solid rgba(245,151,26,0.2);
+  z-index: 999;
+  flex-direction: column;
+  gap: 4px;
+  max-height: calc(100vh - var(--nav-h));
+  overflow-y: auto;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--slate);
+  text-decoration: none;
+  padding: 11px 16px;
+  border-left: 3px solid transparent;
+  border-radius: 0 4px 4px 0;
+  transition: var(--transition);
+  cursor: pointer;
+}
+.mobile-menu a:hover { color: var(--orange); border-left-color: var(--orange); }
+.mobile-menu .mob-sub-label {
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: rgba(245,151,26,0.5);
+  padding: 12px 16px 4px;
+  text-transform: uppercase;
+  font-family: var(--font-display);
+  font-weight: 700;
+  display: block;
+}
+.mobile-menu a.mob-sub {
+  font-size: 13px;
+  padding-left: 28px;
+  letter-spacing: 1.5px;
+  color: var(--iron);
+}
+.mobile-menu a.mob-sub:hover { color: var(--orange); border-left-color: transparent; }
+.mobile-divider { height: 1px; background: rgba(255,255,255,0.06); margin: 6px 0; }
+
+/* ═══════════════════════════════════════════
+   PAGE WRAPPER
+═══════════════════════════════════════════ */
+#app { padding-top: var(--nav-h); }
+
+/* ═══════════════════════════════════════════
+   HERO
+═══════════════════════════════════════════ */
+.hero {
+  min-height: calc(100vh - var(--nav-h));
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: var(--black);
+}
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(135deg, rgba(8,12,16,0.97) 0%, rgba(13,17,23,0.82) 60%, rgba(8,12,16,0.95) 100%),
+    url('https://images.unsplash.com/photo-1581094288338-2314dddb7ece?w=1600&auto=format&fit=crop&q=80') center/cover no-repeat;
+}
+/* Diagonal orange-blue gradient accent */
+.hero-accent-bar {
+  position: absolute;
+  top: 0; right: 0;
+  width: 45%;
+  height: 100%;
+  background: linear-gradient(135deg, transparent 30%, rgba(245,151,26,0.04) 50%, rgba(41,171,226,0.06) 100%);
+  pointer-events: none;
+}
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(245,151,26,0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245,151,26,0.035) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 920px;
+  animation: heroIn 0.9s ease both;
+}
+@keyframes heroIn {
+  from { opacity: 0; transform: translateY(36px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(245,151,26,0.10);
+  border: 1px solid rgba(245,151,26,0.28);
+  padding: 7px 16px;
+  border-radius: 100px;
+  margin-bottom: 28px;
+}
+.hero-badge-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--orange);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(245,151,26,0.5); }
+  50% { box-shadow: 0 0 0 8px rgba(245,151,26,0); }
+}
+.hero-badge span {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--orange);
+}
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(50px, 8.5vw, 116px);
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 0.88;
+  letter-spacing: -3px;
+  color: var(--white);
+  margin-bottom: 28px;
+}
+.hero-title .line-o { color: var(--orange); }
+.hero-title .line-b { color: var(--blue); }
+.hero-sub {
+  font-size: 18px;
+  font-weight: 300;
+  color: var(--slate);
+  max-width: 560px;
+  margin-bottom: 40px;
+  line-height: 1.75;
+}
+.hero-actions { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 60px; }
+.hero-stats {
+  display: flex;
+  gap: 48px;
+  flex-wrap: wrap;
+  padding-top: 40px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+}
+.stat-num {
+  font-family: var(--font-display);
+  font-size: 42px;
+  font-weight: 900;
+  color: var(--white);
+  line-height: 1;
+}
+.stat-num .o { color: var(--orange); }
+.stat-num .b { color: var(--blue); }
+.stat-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  color: var(--slate);
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+.hero-scroll {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--slate);
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  animation: fadeUp 2.2s ease infinite;
+}
+@keyframes fadeUp {
+  0%,100% { opacity: 0.35; transform: translateX(-50%) translateY(0); }
+  50% { opacity: 1; transform: translateX(-50%) translateY(-6px); }
+}
+.hero-scroll-line {
+  width: 1px; height: 44px;
+  background: linear-gradient(to bottom, var(--orange), transparent);
+}
+
+/* ═══════════════════════════════════════════
+   HOME — SERVICES PREVIEW
+═══════════════════════════════════════════ */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 56px;
+}
+.service-card {
+  background: var(--dark);
+  padding: 40px 32px;
+  transition: var(--transition);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.service-card::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+  transform-origin: left;
+}
+.service-card.orange-card::before { background: var(--orange); }
+.service-card.blue-card::before { background: var(--blue); }
+.service-card:hover { background: var(--steel); }
+.service-card:hover::before { transform: scaleX(1); }
+.service-icon {
+  width: 56px; height: 56px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 24px;
+  font-size: 24px;
+  transition: var(--transition);
+}
+.service-icon.orange-icon {
+  background: rgba(245,151,26,0.1);
+  border: 1px solid rgba(245,151,26,0.22);
+  color: var(--orange);
+}
+.service-icon.blue-icon {
+  background: rgba(41,171,226,0.1);
+  border: 1px solid rgba(41,171,226,0.22);
+  color: var(--blue);
+}
+.service-card:hover .service-icon.orange-icon { background: rgba(245,151,26,0.2); }
+.service-card:hover .service-icon.blue-icon { background: rgba(41,171,226,0.2); }
+.service-card h3 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--white);
+  margin-bottom: 12px;
+}
+.service-card p { font-size: 14px; color: var(--slate); line-height: 1.7; }
+
+/* HOME ABOUT STRIP */
+.about-strip {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 500px;
+}
+.about-strip-img {
+  background: url('https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&auto=format&fit=crop&q=80') center/cover no-repeat;
+  position: relative;
+}
+.about-strip-img::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 50%, var(--steel));
+}
+.about-strip-content {
+  background: var(--steel);
+  padding: 80px 64px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.about-strip-content p { color: var(--slate); line-height: 1.8; margin-bottom: 20px; }
+
+/* ═══════════════════════════════════════════
+   SOBRE NÓS PAGE
+═══════════════════════════════════════════ */
+.sobre-hero {
+  background: linear-gradient(135deg, var(--dark), var(--steel));
+  padding: 88px 0;
+  border-bottom: 1px solid rgba(245,151,26,0.15);
+  position: relative;
+  overflow: hidden;
+}
+.sobre-hero::after {
+  content: '';
+  position: absolute;
+  right: 0; top: 0; bottom: 0;
+  width: 40%;
+  background: linear-gradient(135deg, transparent, rgba(41,171,226,0.04));
+}
+.sobre-hero-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+.sobre-hero-img {
+  border-radius: 12px;
+  overflow: hidden;
+  aspect-ratio: 4/3;
+  position: relative;
+}
+.sobre-hero-img img { width: 100%; height: 100%; object-fit: cover; }
+.sobre-hero-img::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 2px solid rgba(245,151,26,0.25);
+  border-radius: 12px;
+  z-index: 1;
+  pointer-events: none;
+}
+.sobre-hero-img-badge {
+  position: absolute;
+  bottom: 20px; left: 20px;
+  background: rgba(8,12,16,0.9);
+  border: 1px solid rgba(245,151,26,0.3);
+  padding: 12px 20px;
+  border-radius: 8px;
+  z-index: 2;
+}
+.sobre-hero-img-badge strong {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--orange);
+  display: block;
+  line-height: 1;
+}
+.sobre-hero-img-badge span { font-size: 11px; color: var(--slate); letter-spacing: 1px; }
+
+.mvv-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 56px;
+}
+.mvv-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-top: 3px solid;
+  padding: 28px 22px;
+  border-radius: var(--radius);
+  transition: var(--transition);
+}
+.mvv-card:hover { background: rgba(255,255,255,0.05); transform: translateY(-4px); }
+.mvv-card.orange { border-top-color: var(--orange); }
+.mvv-card.blue { border-top-color: var(--blue); }
+.mvv-card.green { border-top-color: var(--green); }
+.mvv-card .mvv-icon {
+  font-size: 28px;
+  margin-bottom: 14px;
+}
+.mvv-card.orange .mvv-icon { color: var(--orange); }
+.mvv-card.blue .mvv-icon { color: var(--blue); }
+.mvv-card.green .mvv-icon { color: var(--green); }
+.mvv-card h4 {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+.mvv-card.orange h4 { color: var(--orange); }
+.mvv-card.blue h4 { color: var(--blue); }
+.mvv-card.green h4 { color: var(--green); }
+.mvv-card p { font-size: 13px; color: var(--slate); line-height: 1.7; }
+
+/* Tabs */
+.tabs-section { padding: 80px 0; }
+.tabs-nav {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+  background: rgba(255,255,255,0.03);
+  padding: 7px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.tab-btn {
+  flex: 1;
+  min-width: 140px;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--slate);
+  border-radius: 7px;
+  transition: var(--transition);
+  text-align: center;
+}
+.tab-btn:hover { color: var(--white); background: rgba(255,255,255,0.05); }
+.tab-btn.active { background: var(--orange); color: #fff; }
+
+.tab-content { display: none; animation: tabIn 0.4s ease; }
+.tab-content.active { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+@keyframes tabIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.tab-text h3 {
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--white);
+  margin-bottom: 20px;
+  line-height: 1;
+}
+.tab-text p { color: var(--slate); line-height: 1.8; margin-bottom: 16px; font-size: 15px; }
+.tab-list { list-style: none; margin-top: 24px; }
+.tab-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  font-size: 14px;
+  color: var(--silver);
+}
+.tab-list li i { color: var(--orange); margin-top: 2px; flex-shrink: 0; }
+
+.tab-visual {
+  border-radius: 10px;
+  overflow: hidden;
+  aspect-ratio: 4/3;
+}
+.tab-visual img { width: 100%; height: 100%; object-fit: cover; }
+
+/* DIFERENCIAIS */
+.diff-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-top: 48px;
+}
+.diff-item {
+  text-align: center;
+  padding: 32px 20px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px;
+  transition: var(--transition);
+}
+.diff-item:hover { border-color: rgba(245,151,26,0.3); transform: translateY(-4px); }
+.diff-num {
+  font-family: var(--font-display);
+  font-size: 52px;
+  font-weight: 900;
+  color: var(--orange);
+  line-height: 1;
+}
+.diff-num.blue-num { color: var(--blue); }
+.diff-label { font-size: 12px; font-weight: 600; color: var(--slate); margin-top: 8px; letter-spacing: 0.5px; }
+
+/* PORTFOLIO SECTION */
+.portfolio-strip {
+  background: linear-gradient(135deg, var(--steel), var(--mid));
+  border-top: 1px solid rgba(245,151,26,0.15);
+  border-bottom: 1px solid rgba(41,171,226,0.15);
+  padding: 72px 0;
+}
+.portfolio-strip-inner {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 48px;
+  align-items: center;
+}
+.portfolio-strip h3 {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--white);
+  margin-bottom: 12px;
+  line-height: 1;
+}
+.portfolio-strip p { color: var(--slate); line-height: 1.75; max-width: 520px; }
+
+/* ═══════════════════════════════════════════
+   SERVIÇOS PAGE
+═══════════════════════════════════════════ */
+.page-hero {
+  padding: 80px 0;
+  border-bottom: 1px solid rgba(245,151,26,0.12);
+  position: relative;
+  overflow: hidden;
+}
+.page-hero-orange { background: linear-gradient(135deg, var(--black) 0%, rgba(245,151,26,0.07) 100%); }
+.page-hero-blue { background: linear-gradient(135deg, var(--black) 0%, rgba(41,171,226,0.07) 100%); }
+.page-hero-grid-line {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.serv-tabs-nav {
+  display: flex;
+  gap: 0;
+  margin-bottom: 56px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.serv-tab-btn {
+  flex: 1;
+  padding: 20px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--slate);
+  transition: var(--transition);
+  border-right: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.serv-tab-btn:last-child { border-right: none; }
+.serv-tab-btn:hover { color: var(--white); background: rgba(255,255,255,0.04); }
+.serv-tab-btn.active.orange-tab { background: var(--orange); color: #fff; }
+.serv-tab-btn.active.blue-tab { background: var(--blue); color: #fff; }
+
+.serv-content { display: none; }
+.serv-content.active { display: block; animation: tabIn 0.4s ease; }
+
+.serv-intro {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+  margin-bottom: 64px;
+}
+.serv-intro-img { border-radius: 10px; overflow: hidden; aspect-ratio: 16/10; }
+.serv-intro-img img { width: 100%; height: 100%; object-fit: cover; }
+
+.serv-solutions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+  margin-top: 40px;
+}
+.serv-sol-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 8px;
+  padding: 26px 22px;
+  transition: var(--transition);
+}
+.serv-sol-card.orange-card:hover { border-color: rgba(245,151,26,0.3); background: rgba(245,151,26,0.04); }
+.serv-sol-card.blue-card:hover { border-color: rgba(41,171,226,0.3); background: rgba(41,171,226,0.04); }
+.serv-sol-card .icon { font-size: 28px; margin-bottom: 14px; }
+.serv-sol-card.orange-card .icon { color: var(--orange); }
+.serv-sol-card.blue-card .icon { color: var(--blue); }
+.serv-sol-card h4 {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--white);
+  margin-bottom: 8px;
+}
+.serv-sol-card p { font-size: 13px; color: var(--slate); line-height: 1.7; }
+
+/* Flow steps */
+.residuos-flow {
+  display: flex;
+  gap: 0;
+  margin: 48px 0;
+  flex-wrap: wrap;
+}
+.flow-step {
+  flex: 1;
+  min-width: 160px;
+  padding: 28px 20px;
+  background: var(--steel);
+  position: relative;
+  text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.06);
+}
+.flow-step:last-child { border-right: none; }
+.flow-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: -12px; top: 50%;
+  transform: translateY(-50%);
+  border: 8px solid transparent;
+  border-left-color: var(--blue);
+  z-index: 1;
+}
+.flow-step-num {
+  font-family: var(--font-display);
+  font-size: 44px;
+  font-weight: 900;
+  color: rgba(41,171,226,0.18);
+  line-height: 1;
+  margin-bottom: 10px;
+}
+.flow-step h4 {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--white);
+  margin-bottom: 6px;
+}
+.flow-step p { font-size: 12px; color: var(--slate); }
+
+.env-stats {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 18px;
+  margin-top: 48px;
+}
+.env-stat {
+  background: linear-gradient(135deg, rgba(42,157,96,0.1), rgba(42,157,96,0.04));
+  border: 1px solid rgba(42,157,96,0.2);
+  border-radius: 10px;
+  padding: 28px;
+  text-align: center;
+}
+.env-stat-num {
+  font-family: var(--font-display);
+  font-size: 46px;
+  font-weight: 900;
+  color: var(--green);
+  line-height: 1;
+}
+.env-stat-label { font-size: 12px; color: var(--slate); margin-top: 6px; }
+
+/* ═══════════════════════════════════════════
+   PRODUTOS PAGE
+═══════════════════════════════════════════ */
+.produtos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 22px;
+  margin-top: 56px;
+}
+.produto-card {
+  background: var(--dark);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: var(--transition);
+  cursor: pointer;
+}
+.produto-card:hover { transform: translateY(-6px); box-shadow: 0 24px 64px rgba(0,0,0,0.45); }
+.produto-card.orange-prod:hover { border-color: rgba(245,151,26,0.35); }
+.produto-card.blue-prod:hover { border-color: rgba(41,171,226,0.35); }
+.produto-img { aspect-ratio: 16/10; overflow: hidden; position: relative; }
+.produto-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+.produto-card:hover .produto-img img { transform: scale(1.06); }
+.produto-badge {
+  position: absolute;
+  top: 12px; left: 12px;
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 3px;
+  color: #fff;
+}
+.produto-badge.orange-badge { background: var(--orange); }
+.produto-badge.blue-badge { background: var(--blue); }
+.produto-body { padding: 24px; }
+.produto-body h3 {
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--white);
+  margin-bottom: 10px;
+}
+.produto-body p { font-size: 13px; color: var(--slate); line-height: 1.7; margin-bottom: 18px; }
+.produto-specs { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 18px; }
+.spec-tag {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--slate);
+}
+
+/* MODAL */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.88);
+  z-index: 2000;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--dark);
+  border: 1px solid rgba(245,151,26,0.2);
+  border-radius: 14px;
+  max-width: 800px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: modalIn 0.3s ease;
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.modal-header {
+  padding: 26px 32px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  background: var(--dark);
+  z-index: 1;
+}
+.modal-header h2 {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--white);
+}
+.modal-close {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--slate);
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  transition: var(--transition);
+}
+.modal-close:hover { background: rgba(192,57,43,0.2); border-color: rgba(192,57,43,0.4); color: var(--white); }
+.modal-body { padding: 32px; }
+.modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+.modal-img { border-radius: 8px; overflow: hidden; aspect-ratio: 4/3; }
+.modal-img img { width: 100%; height: 100%; object-fit: cover; }
+.modal-info h3 {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--orange);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.modal-info p { font-size: 14px; color: var(--slate); line-height: 1.8; margin-bottom: 16px; }
+.modal-specs-table { width: 100%; border-collapse: collapse; margin-top: 14px; }
+.modal-specs-table td {
+  padding: 9px 12px;
+  font-size: 13px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  color: var(--silver);
+}
+.modal-specs-table td:first-child { color: var(--slate); font-weight: 600; }
+
+/* ═══════════════════════════════════════════
+   CONTACTO PAGE
+═══════════════════════════════════════════ */
+.contacto-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 64px;
+  align-items: start;
+  padding: 80px 0;
+}
+.contacto-info h3 {
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--white);
+  margin-bottom: 16px;
+  line-height: 1;
+}
+.contacto-info p { color: var(--slate); line-height: 1.8; margin-bottom: 36px; }
+.contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.contact-icon {
+  width: 44px; height: 44px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.contact-icon.orange-icon { background: rgba(245,151,26,0.1); border: 1px solid rgba(245,151,26,0.2); color: var(--orange); }
+.contact-icon.blue-icon { background: rgba(41,171,226,0.1); border: 1px solid rgba(41,171,226,0.2); color: var(--blue); }
+.contact-text strong { display: block; font-weight: 700; color: var(--white); font-size: 15px; margin-bottom: 2px; }
+.contact-text span { font-size: 14px; color: var(--slate); }
+
+.form-card {
+  background: var(--steel);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  padding: 40px;
+}
+.form-card h3 {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--white);
+  margin-bottom: 28px;
+}
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.form-group { display: flex; flex-direction: column; gap: 7px; margin-bottom: 16px; }
+.form-group label {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--slate);
+}
+.form-group input,
+.form-group select,
+.form-group textarea {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
+  padding: 13px 16px;
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 14px;
+  transition: border-color 0.25s ease;
+  outline: none;
+  width: 100%;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus { border-color: var(--orange); }
+.form-group textarea { resize: vertical; min-height: 120px; }
+.form-group select { cursor: pointer; }
+.form-group select option { background: var(--dark); }
+.success-msg {
+  display: none;
+  background: rgba(42,157,96,0.12);
+  border: 1px solid rgba(42,157,96,0.3);
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-top: 16px;
+  color: var(--green);
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: 14px;
+}
+.success-msg.show { display: flex; align-items: center; gap: 10px; }
+
+/* ═══════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════ */
+footer {
+  background: var(--dark);
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding: 64px 0 32px;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  gap: 48px;
+  padding-bottom: 48px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  margin-bottom: 32px;
+}
+.footer-brand img { height: 40px; margin-bottom: 16px; }
+.footer-brand p { font-size: 13px; color: var(--slate); line-height: 1.8; max-width: 280px; }
+.footer-col h4 {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--white);
+  margin-bottom: 20px;
+}
+.footer-col ul { list-style: none; }
+.footer-col li { margin-bottom: 10px; }
+.footer-col a {
+  font-size: 13px;
+  color: var(--slate);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.footer-col a:hover { color: var(--orange); }
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.footer-bottom p { font-size: 12px; color: var(--iron); }
+
+/* BACK TO TOP */
+.back-top {
+  position: fixed;
+  bottom: 32px; right: 32px;
+  width: 44px; height: 44px;
+  background: var(--orange);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 8px 24px rgba(245,151,26,0.4);
+  transition: var(--transition);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 900;
+}
+.back-top.show { opacity: 1; pointer-events: auto; }
+.back-top:hover { background: var(--orange-dark); transform: translateY(-3px); }
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .sobre-hero-grid { grid-template-columns: 1fr; gap: 40px; }
+  .sobre-hero-img { max-width: 480px; margin: 0 auto; }
+}
+@media (max-width: 768px) {
+  :root { --nav-h: 68px; --section-pad: 72px 0; }
+  .nav-links, .nav-cta { display: none; }
+  .hamburger { display: flex; }
+  .hero-title { font-size: clamp(46px, 13vw, 88px); }
+  .hero-stats { gap: 28px; }
+  .about-strip { grid-template-columns: 1fr; }
+  .about-strip-img { height: 280px; }
+  .about-strip-content { padding: 48px 32px; }
+  .mvv-grid { grid-template-columns: 1fr; }
+  .tab-content.active { grid-template-columns: 1fr; }
+  .serv-intro { grid-template-columns: 1fr; gap: 32px; }
+  .contacto-grid { grid-template-columns: 1fr; }
+  .modal-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+  .env-stats { grid-template-columns: 1fr; }
+  .portfolio-strip-inner { grid-template-columns: 1fr; gap: 24px; }
+  .form-row { grid-template-columns: 1fr; }
+  .diff-grid { grid-template-columns: repeat(2,1fr); }
+  .residuos-flow { flex-direction: column; }
+  .flow-step:not(:last-child)::after { display: none; }
+}
+@media (max-width: 480px) {
+  .footer-grid { grid-template-columns: 1fr; }
+  .hero-actions { flex-direction: column; }
+  .diff-grid { grid-template-columns: 1fr 1fr; }
+  .form-card { padding: 24px 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ NAVBAR ═══════════════ -->
+<nav id="navbar">
+  <div class="container">
+    <div class="nav-inner">
+
+      <!-- Logo -->
+      <a class="logo" onclick="navigate('home')">
+        <img src="assets/logourban.png" alt="Urban Gestão de Instalações">
+      </a>
+
+      <!-- Desktop Nav -->
+      <ul class="nav-links">
+        <li><a id="nav-home" class="active" onclick="navigate('home')">Início</a></li>
+        <li><a id="nav-sobre" onclick="navigate('sobre')">Sobre Nós</a></li>
+        <li>
+          <a id="nav-servicos" onclick="navigate('servicos')">
+            Serviços <i class="fa-solid fa-chevron-down"></i>
+          </a>
+          <div class="dropdown">
+            <a onclick="navigate('servicos');openServTab('tab-serralharia',document.querySelector('.serv-tab-btn:nth-child(1)'))">
+              <i class="fa-solid fa-industry"></i> Serralharia Industrial
+            </a>
+            <div class="dropdown-divider"></div>
+            <a onclick="navigate('servicos');openServTab('tab-residuos',document.querySelector('.serv-tab-btn:nth-child(2)'))">
+              <i class="fa-solid fa-recycle"></i> Gestão de Resíduos
+            </a>
+          </div>
+        </li>
+        <li>
+          <a id="nav-produtos" onclick="navigate('produtos')">
+            Produtos <i class="fa-solid fa-chevron-down"></i>
+          </a>
+          <div class="dropdown">
+            <a onclick="navigate('produtos')"><i class="fa-solid fa-warehouse"></i> Estruturas Metálicas</a>
+            <a onclick="navigate('produtos')"><i class="fa-solid fa-trash-can"></i> Contentores</a>
+            <a onclick="navigate('produtos')"><i class="fa-solid fa-truck"></i> Reboques & Trailers</a>
+            <a onclick="navigate('produtos')"><i class="fa-solid fa-door-open"></i> Portões & Grades</a>
+          </div>
+        </li>
+        <li><a id="nav-contacto" onclick="navigate('contacto')">Contacto</a></li>
+      </ul>
+
+      <a class="btn btn-primary btn-small nav-cta" onclick="navigate('contacto')">
+        <i class="fa-solid fa-paper-plane"></i> Pedir Orçamento
+      </a>
+
+      <!-- Hamburger -->
+      <button class="hamburger" id="hamburger" onclick="toggleMobile()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a onclick="navigate('home');toggleMobile()"><i class="fa-solid fa-house" style="margin-right:8px;color:var(--orange)"></i> Início</a>
+  <a onclick="navigate('sobre');toggleMobile()"><i class="fa-solid fa-circle-info" style="margin-right:8px;color:var(--orange)"></i> Sobre Nós</a>
+  <div class="mobile-divider"></div>
+  <span class="mob-sub-label">Serviços</span>
+  <a class="mob-sub" onclick="navigate('servicos');toggleMobile()"><i class="fa-solid fa-industry" style="margin-right:8px;color:var(--orange)"></i> Serralharia Industrial</a>
+  <a class="mob-sub" onclick="navigate('servicos');toggleMobile()"><i class="fa-solid fa-recycle" style="margin-right:8px;color:var(--blue)"></i> Gestão de Resíduos</a>
+  <div class="mobile-divider"></div>
+  <span class="mob-sub-label">Produtos</span>
+  <a class="mob-sub" onclick="navigate('produtos');toggleMobile()"><i class="fa-solid fa-warehouse" style="margin-right:8px;color:var(--orange)"></i> Estruturas Metálicas</a>
+  <a class="mob-sub" onclick="navigate('produtos');toggleMobile()"><i class="fa-solid fa-trash-can" style="margin-right:8px;color:var(--blue)"></i> Contentores</a>
+  <div class="mobile-divider"></div>
+  <a onclick="navigate('contacto');toggleMobile()"><i class="fa-solid fa-envelope" style="margin-right:8px;color:var(--orange)"></i> Contacto</a>
+</div>
+
+<!-- ═══════════════ APP ═══════════════ -->
+<div id="app">
+
+<!-- ╔═══════════════════════════════════╗ -->
+<!-- ║          HOME PAGE                ║ -->
+<!-- ╚═══════════════════════════════════╝ -->
+<div class="page active" id="page-home">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-accent-bar"></div>
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <div class="hero-badge-dot"></div>
+          <span>Pemba, Moçambique — Est. 2020</span>
+        </div>
+        <h1 class="hero-title">
+          Soluções<br>
+          <span class="line-o">Industriais</span><br>
+          <span class="line-b">Sustentáveis</span>
+        </h1>
+        <p class="hero-sub">
+          Serralharia industrial de precisão e gestão responsável de resíduos.
+          Comprometidos com qualidade, eficiência e o desenvolvimento sustentável de Moçambique.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" onclick="navigate('servicos')">
+            <i class="fa-solid fa-bolt"></i> Os Nossos Serviços
+          </a>
+          <a class="btn btn-outline-blue" onclick="navigate('sobre')">
+            <i class="fa-solid fa-file-lines"></i> Quem Somos
+          </a>
+        </div>
+        <div class="hero-stats">
+          <div>
+            <div class="stat-num">5<span class="o">+</span></div>
+            <div class="stat-label">Anos de Experiência</div>
+          </div>
+          <div>
+            <div class="stat-num">50<span class="b">+</span></div>
+            <div class="stat-label">Projetos Concluídos</div>
+          </div>
+          <div>
+            <div class="stat-num">100<span class="o">%</span></div>
+            <div class="stat-label">Compromisso Ambiental</div>
+          </div>
+          <div>
+            <div class="stat-num">2<span class="b"></span></div>
+            <div class="stat-label">Áreas de Atuação</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <div class="hero-scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <!-- SERVICES PREVIEW -->
+  <section class="section section-dark">
+    <div class="container">
+      <span class="label"><i class="fa-solid fa-star"></i> &nbsp;O que fazemos</span>
+      <h2 class="section-title">Áreas de <span class="o">Atuação</span></h2>
+      <div class="services-grid">
+        <div class="service-card orange-card" onclick="navigate('servicos')">
+          <div class="service-icon orange-icon"><i class="fa-solid fa-industry"></i></div>
+          <h3>Serralharia Industrial</h3>
+          <p>Conceção, fabrico e montagem de estruturas metálicas com elevados padrões de resistência, segurança e durabilidade. Cada projeto adaptado às exigências do cliente.</p>
+        </div>
+        <div class="service-card blue-card" onclick="navigate('servicos');openServTab('tab-residuos',document.querySelector('.serv-tab-btn:nth-child(2)'))">
+          <div class="service-icon blue-icon"><i class="fa-solid fa-recycle"></i></div>
+          <h3>Gestão de Resíduos</h3>
+          <p>Recolha, transporte, tratamento e destino final adequado de resíduos sólidos. Apostamos na reciclagem e na valorização de materiais para um ambiente mais saudável.</p>
+        </div>
+        <div class="service-card orange-card" onclick="navigate('produtos')">
+          <div class="service-icon orange-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+          <h3>Fabrico de Contentores</h3>
+          <p>Produção de contentores metálicos de alta qualidade para resíduos industriais e municipais, com design funcional e acabamento durável.</p>
+        </div>
+        <div class="service-card blue-card" onclick="navigate('contacto')">
+          <div class="service-icon blue-icon"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+          <h3>Projetos Especiais</h3>
+          <p>Desenvolvimento de soluções metálicas personalizadas — reboques, plataformas, grades, portões e estruturas sob medida para qualquer necessidade industrial.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT STRIP -->
+  <section class="about-strip">
+    <div class="about-strip-img"></div>
+    <div class="about-strip-content">
+      <span class="label"><i class="fa-solid fa-building"></i> &nbsp;Quem somos</span>
+      <h2 class="section-title" style="margin-bottom:24px">A Nossa <span class="o">História</span></h2>
+      <p>Somos a <strong style="color:var(--white)">URBAN Gestão de Instalações</strong>, uma empresa moçambicana dedicada à prestação de serviços de Serralharia Industrial e Gestão de Resíduos, sediada em Pemba.</p>
+      <p>Comprometidos com a qualidade, eficiência e responsabilidade ambiental, oferecemos soluções completas que respondem às necessidades do setor industrial e contribuem para o desenvolvimento sustentável.</p>
+      <div style="margin-top:8px;display:flex;gap:12px;flex-wrap:wrap">
+        <a class="btn btn-primary btn-small" onclick="navigate('sobre')">
+          <i class="fa-solid fa-arrow-right"></i> Saber Mais
+        </a>
+        <a class="btn btn-outline-blue btn-small" href="assets/PORTFOLIO.pdf" download>
+          <i class="fa-solid fa-download"></i> Portfólio PDF
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BANNER -->
+  <section class="section" style="background:linear-gradient(135deg,var(--steel),var(--mid));text-align:center;padding:72px 0">
+    <div class="container">
+      <span class="label" style="justify-content:center;display:block"><i class="fa-solid fa-handshake"></i> &nbsp;Trabalhe Connosco</span>
+      <h2 class="section-title" style="margin-bottom:20px">Tem um <span class="b">Projeto</span> em Mente?</h2>
+      <p style="color:var(--slate);max-width:520px;margin:0 auto 36px;line-height:1.8">
+        Entre em contacto com a nossa equipa. Analisamos o seu projeto e apresentamos a melhor solução técnica e económica.
+      </p>
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+        <a class="btn btn-primary" onclick="navigate('contacto')">
+          <i class="fa-solid fa-paper-plane"></i> Solicitar Orçamento
+        </a>
+        <a class="btn btn-outline" href="tel:+258824003219">
+          <i class="fa-solid fa-phone"></i> (+258) 824 003 219
+        </a>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /home -->
+
+
+<!-- ╔═══════════════════════════════════╗ -->
+<!-- ║         SOBRE NÓS PAGE            ║ -->
+<!-- ╚═══════════════════════════════════╝ -->
+<div class="page" id="page-sobre">
+
+  <!-- HERO -->
+  <section class="sobre-hero">
+    <div class="container">
+      <div class="sobre-hero-grid">
+        <div>
+          <span class="label"><i class="fa-solid fa-building"></i> &nbsp;Quem Somos</span>
+          <h1 class="section-title" style="margin-bottom:24px">
+            <span class="o">Urban</span><br>Gestão de<br><span class="b">Instalações</span>
+          </h1>
+          <p style="color:var(--slate);line-height:1.85;margin-bottom:20px;font-size:16px">
+            Somos uma empresa moçambicana dedicada à prestação de serviços de <strong style="color:var(--white)">Serralharia Industrial</strong> e <strong style="color:var(--white)">Gestão de Resíduos</strong>, comprometida com a qualidade, eficiência e responsabilidade ambiental.
+          </p>
+          <p style="color:var(--slate);line-height:1.85;font-size:15px">
+            Atuamos com o objetivo de oferecer soluções completas que respondam às necessidades do setor industrial e contribuam para o desenvolvimento sustentável de Moçambique.
+          </p>
+          <div style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap">
+            <a class="btn btn-primary" onclick="navigate('contacto')">
+              <i class="fa-solid fa-paper-plane"></i> Contacte-nos
+            </a>
+            <a class="btn btn-outline-blue" href="assets/PORTFOLIO.pdf" download>
+              <i class="fa-solid fa-download"></i> Baixar Portfólio
+            </a>
+          </div>
+        </div>
+        <div>
+          <div class="sobre-hero-img">
+            <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&auto=format&fit=crop&q=80" alt="Urban trabalhos">
+            <div class="sobre-hero-img-badge">
+              <strong>2020</strong>
+              <span>Fundada em Pemba</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MVV -->
+  <section class="section section-dark">
+    <div class="container">
+      <span class="label"><i class="fa-solid fa-compass"></i> &nbsp;Nossa identidade</span>
+      <h2 class="section-title">Missão, Visão<br>& <span class="b">Valores</span></h2>
+      <div class="mvv-grid">
+        <div class="mvv-card orange">
+          <div class="mvv-icon"><i class="fa-solid fa-bullseye"></i></div>
+          <h4>Missão</h4>
+          <p>Fornecer serviços de serralharia industrial com qualidade e precisão, promovendo simultaneamente a gestão adequada de resíduos para reduzir impactos ambientais e melhorar a qualidade de vida nas comunidades.</p>
+        </div>
+        <div class="mvv-card blue">
+          <div class="mvv-icon"><i class="fa-solid fa-eye"></i></div>
+          <h4>Visão</h4>
+          <p>Ser referência nacional em soluções industriais integradas e gestão ambiental responsável, reconhecidos pela excelência técnica, inovação e compromisso com Moçambique.</p>
+        </div>
+        <div class="mvv-card green">
+          <div class="mvv-icon"><i class="fa-solid fa-leaf"></i></div>
+          <h4>Valores</h4>
+          <p>Qualidade e precisão em cada projeto. Responsabilidade ambiental e sustentabilidade. Ética e transparência no relacionamento com clientes e parceiros. Inovação contínua.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TABS — Competências -->
+  <section class="tabs-section section-mid">
+    <div class="container">
+      <span class="label"><i class="fa-solid fa-gears"></i> &nbsp;Competências</span>
+      <h2 class="section-title" style="margin-bottom:40px">As Nossas <span class="o">Especialidades</span></h2>
+      <div class="tabs-nav">
+        <button class="tab-btn active" onclick="openTab('tab-serra', this)">
+          <i class="fa-solid fa-industry"></i> Serralharia Industrial
+        </button>
+        <button class="tab-btn" onclick="openTab('tab-res', this)">
+          <i class="fa-solid fa-recycle"></i> Gestão de Resíduos
+        </button>
+        <button class="tab-btn" onclick="openTab('tab-proj', this)">
+          <i class="fa-solid fa-diagram-project"></i> Projetos Especiais
+        </button>
+      </div>
+      <div class="tab-content active" id="tab-serra">
+        <div class="tab-text">
+          <h3>Serralharia <span style="color:var(--orange)">Industrial</span></h3>
+          <p>Destacamo-nos pela conceção, fabrico e montagem de estruturas metálicas, garantindo elevados padrões de resistência, segurança e durabilidade.</p>
+          <p>Trabalhamos com profissionalismo e rigor técnico, adaptando cada projeto às exigências dos nossos clientes.</p>
+          <ul class="tab-list">
+            <li><i class="fa-solid fa-check-circle"></i> Conceção e fabrico de estruturas metálicas</li>
+            <li><i class="fa-solid fa-check-circle"></i> Montagem de coberturas e galpões industriais</li>
+            <li><i class="fa-solid fa-check-circle"></i> Fabrico de contentores metálicos</li>
+            <li><i class="fa-solid fa-check-circle"></i> Construção de reboques e trailers</li>
+            <li><i class="fa-solid fa-check-circle"></i> Portões, grades e vedações industriais</li>
+            <li><i class="fa-solid fa-check-circle"></i> Soldadura e reparação de equipamentos</li>
+          </ul>
+        </div>
+        <div class="tab-visual">
+          <img src="https://images.unsplash.com/photo-1581094288338-2314dddb7ece?w=700&auto=format&fit=crop&q=80" alt="Serralharia Industrial">
+        </div>
+      </div>
+      <div class="tab-content" id="tab-res">
+        <div class="tab-text">
+          <h3>Gestão de <span style="color:var(--blue)">Resíduos</span></h3>
+          <p>Desenvolvemos serviços de recolha, transporte, tratamento e destino final adequado dos resíduos sólidos, promovendo práticas sustentáveis.</p>
+          <p>Apostamos na reciclagem e na valorização de materiais, contribuindo para a preservação do meio ambiente e para uma economia mais responsável.</p>
+          <ul class="tab-list">
+            <li><i class="fa-solid fa-check-circle" style="color:var(--blue)"></i> Recolha e transporte de resíduos sólidos</li>
+            <li><i class="fa-solid fa-check-circle" style="color:var(--blue)"></i> Tratamento e destino final adequado</li>
+            <li><i class="fa-solid fa-check-circle" style="color:var(--blue)"></i> Reciclagem e valorização de materiais</li>
+            <li><i class="fa-solid fa-check-circle" style="color:var(--blue)"></i> Gestão ambiental e relatórios de conformidade</li>
+            <li><i class="fa-solid fa-check-circle" style="color:var(--blue)"></i> Consultoria em sustentabilidade</li>
+          </ul>
+        </div>
+        <div class="tab-visual">
+          <img src="https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=700&auto=format&fit=crop&q=80" alt="Gestão de Resíduos">
+        </div>
+      </div>
+      <div class="tab-content" id="tab-proj">
+        <div class="tab-text">
+          <h3>Projetos <span style="color:var(--orange)">Especiais</span></h3>
+          <p>Desenvolvemos soluções metálicas completamente personalizadas para atender as necessidades específicas de cada cliente.</p>
+          <p>Da conceção ao fabrico e entrega, garantimos qualidade e pontualidade em cada etapa do projeto.</p>
+          <ul class="tab-list">
+            <li><i class="fa-solid fa-check-circle"></i> Projetos industriais à medida</li>
+            <li><i class="fa-solid fa-check-circle"></i> Prototipagem e desenvolvimento técnico</li>
+            <li><i class="fa-solid fa-check-circle"></i> Estruturas de suporte e plataformas</li>
+            <li><i class="fa-solid fa-check-circle"></i> Soluções para setor petrolífero e gás</li>
+            <li><i class="fa-solid fa-check-circle"></i> Equipamentos municipais personalizados</li>
+          </ul>
+        </div>
+        <div class="tab-visual">
+          <img src="https://images.unsplash.com/photo-1565688534245-05d6b5be184a?w=700&auto=format&fit=crop&q=80" alt="Projetos Especiais">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DIFERENCIAIS -->
+  <section class="section section-dark">
+    <div class="container">
+      <span class="label"><i class="fa-solid fa-trophy"></i> &nbsp;Porque escolher-nos</span>
+      <h2 class="section-title">Os Nossos <span class="o">Diferenciais</span></h2>
+      <div class="diff-grid">
+        <div class="diff-item">
+          <div class="diff-num">5<span style="font-size:0.6em">+</span></div>
+          <div class="diff-label">Anos de Experiência</div>
+        </div>
+        <div class="diff-item">
+          <div class="diff-num blue-num">50<span style="font-size:0.6em">+</span></div>
+          <div class="diff-label">Projetos Realizados</div>
+        </div>
+        <div class="diff-item">
+          <div class="diff-num">100<span style="font-size:0.5em">%</span></div>
+          <div class="diff-label">Clientes Satisfeitos</div>
+        </div>
+        <div class="diff-item">
+          <div class="diff-num blue-num">2</div>
+          <div class="diff-label">Áreas de Especialização</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PORTFOLIO DOWNLOAD -->
+  <section class="portfolio-strip">
+    <div class="container">
+      <div class="portfolio-strip-inner">
+        <div>
+          <span class="label"><i class="fa-solid fa-file-pdf"></i> &nbsp;Portfólio Corporativo</span>
+          <h3>Conheça o Nosso <span style="color:var(--orange)">Trabalho</span></h3>
+          <p>Descarregue o nosso portfólio completo e descubra a qualidade dos projetos que já realizámos em Pemba e em toda a Região Norte de Moçambique.</p>
+        </div>
+        <div>
+          <a class="btn btn-primary" href="assets/PORTFOLIO.pdf" download style="white-space:nowrap">
+            <i class="fa-solid fa-download"></i> Baixar Portfólio PDF
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /sobre -->
+
+
+<!-- ╔═══════════════════════════════════╗ -->
+<!-- ║         SERVIÇOS PAGE             ║ -->
+<!-- ╚═══════════════════════════════════╝ -->
+<div class="page" id="page-servicos">
+
+  <section class="page-hero page-hero-orange">
+    <div class="page-hero-grid-line"></div>
+    <div class="container" style="position:relative;z-index:2;text-align:center">
+      <span class="label"><i class="fa-solid fa-gears"></i> &nbsp;O Que Fazemos</span>
+      <h1 class="section-title">Nossos <span class="o">Serviços</span></h1>
+      <p style="color:var(--slate);max-width:520px;margin:20px auto 0;font-size:16px;line-height:1.75">
+        Duas grandes áreas de atuação, com um objetivo comum: entregar qualidade, eficiência e compromisso ambiental.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section-dark">
+    <div class="container">
+      <div class="serv-tabs-nav">
+        <button class="serv-tab-btn active orange-tab" onclick="openServTab('tab-serralharia', this)">
+          <i class="fa-solid fa-industry"></i> Serralharia Industrial
+        </button>
+        <button class="serv-tab-btn blue-tab" onclick="openServTab('tab-residuos', this)">
+          <i class="fa-solid fa-recycle"></i> Gestão de Resíduos
+        </button>
+      </div>
+
+      <!-- TAB SERRALHARIA -->
+      <div class="serv-content active" id="tab-serralharia">
+        <div class="serv-intro">
+          <div>
+            <span class="label"><i class="fa-solid fa-fire-flame-curved"></i> &nbsp;Serralharia Industrial</span>
+            <h2 class="section-title" style="margin-bottom:20px">Estruturas <span class="o">Metálicas</span></h2>
+            <p style="color:var(--slate);line-height:1.85;margin-bottom:20px;font-size:15px">
+              Destacamo-nos pela conceção, fabrico e montagem de estruturas metálicas, garantindo elevados padrões de resistência, segurança e durabilidade.
+            </p>
+            <p style="color:var(--slate);line-height:1.85;font-size:15px">
+              Trabalhamos com profissionalismo e rigor técnico, adaptando cada projeto às exigências específicas dos nossos clientes.
+            </p>
+            <a class="btn btn-primary" style="margin-top:28px" onclick="navigate('contacto')">
+              <i class="fa-solid fa-paper-plane"></i> Pedir Orçamento
+            </a>
+          </div>
+          <div class="serv-intro-img">
+            <img src="https://images.unsplash.com/photo-1581094288338-2314dddb7ece?w=700&auto=format&fit=crop&q=80" alt="Serralharia">
+          </div>
+        </div>
+
+        <span class="label" style="margin-top:16px"><i class="fa-solid fa-list-check"></i> &nbsp;Soluções Disponíveis</span>
+        <h3 class="section-title" style="font-size:clamp(28px,4vw,48px);margin-bottom:0">O que <span class="o">Oferecemos</span></h3>
+        <div class="serv-solutions">
+          <div class="serv-sol-card orange-card">
+            <div class="icon"><i class="fa-solid fa-warehouse"></i></div>
+            <h4>Estruturas & Galpões</h4>
+            <p>Fabrico e montagem de estruturas metálicas para galpões industriais, armazéns, coberturas e instalações de grande porte.</p>
+          </div>
+          <div class="serv-sol-card orange-card">
+            <div class="icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+            <h4>Contentores Metálicos</h4>
+            <p>Produção de contentores de resíduos de alta durabilidade para uso municipal e industrial, com diferentes capacidades.</p>
+          </div>
+          <div class="serv-sol-card orange-card">
+            <div class="icon"><i class="fa-solid fa-truck"></i></div>
+            <h4>Reboques & Trailers</h4>
+            <p>Fabrico de reboques porta-contentores e trailers personalizados para transporte de materiais e equipamentos.</p>
+          </div>
+          <div class="serv-sol-card orange-card">
+            <div class="icon"><i class="fa-solid fa-door-open"></i></div>
+            <h4>Portões & Grades</h4>
+            <p>Portões industriais, grades de segurança e vedações metálicas manuais ou automatizadas para todos os setores.</p>
+          </div>
+          <div class="serv-sol-card orange-card">
+            <div class="icon"><i class="fa-solid fa-layer-group"></i></div>
+            <h4>Plataformas & Passarelas</h4>
+            <p>Estruturas de acesso elevado, plataformas industriais e passarelas com chapa antiderrapante e guarda-corpos.</p>
+          </div>
+          <div class="serv-sol-card orange-card">
+            <div class="icon"><i class="fa-solid fa-fire"></i></div>
+            <h4>Soldadura Especializada</h4>
+            <p>Serviços de soldadura MIG, TIG e elétrica para reparação, manutenção e fabrico de peças industriais em geral.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB RESÍDUOS -->
+      <div class="serv-content" id="tab-residuos">
+        <div class="serv-intro">
+          <div>
+            <span class="label label-blue"><i class="fa-solid fa-earth-africa"></i> &nbsp;Gestão de Resíduos</span>
+            <h2 class="section-title" style="margin-bottom:20px">Ambiente <span class="b">Sustentável</span></h2>
+            <p style="color:var(--slate);line-height:1.85;margin-bottom:20px;font-size:15px">
+              Desenvolvemos serviços de recolha, transporte, tratamento e destino final adequado dos resíduos sólidos, promovendo práticas sustentáveis e reduzindo o impacto ambiental.
+            </p>
+            <p style="color:var(--slate);line-height:1.85;font-size:15px">
+              Apostamos na reciclagem e na valorização de materiais, contribuindo para a preservação do meio ambiente e para uma economia mais responsável.
+            </p>
+            <a class="btn btn-blue" style="margin-top:28px" onclick="navigate('contacto')">
+              <i class="fa-solid fa-paper-plane"></i> Pedir Orçamento
+            </a>
+          </div>
+          <div class="serv-intro-img">
+            <img src="https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=700&auto=format&fit=crop&q=80" alt="Gestão de Resíduos">
+          </div>
+        </div>
+
+        <!-- Flow -->
+        <span class="label label-blue"><i class="fa-solid fa-arrow-right-arrow-left"></i> &nbsp;Processo de Trabalho</span>
+        <h3 class="section-title" style="font-size:clamp(28px,4vw,48px);margin-bottom:32px">Fluxo <span class="b">Operacional</span></h3>
+        <div class="residuos-flow">
+          <div class="flow-step">
+            <div class="flow-step-num">01</div>
+            <h4>Recolha</h4>
+            <p>Recolha programada de resíduos sólidos industriais e domésticos</p>
+          </div>
+          <div class="flow-step">
+            <div class="flow-step-num">02</div>
+            <h4>Transporte</h4>
+            <p>Transporte seguro até às instalações de triagem e tratamento</p>
+          </div>
+          <div class="flow-step">
+            <div class="flow-step-num">03</div>
+            <h4>Triagem</h4>
+            <p>Separação e classificação dos resíduos por tipo e categoria</p>
+          </div>
+          <div class="flow-step">
+            <div class="flow-step-num">04</div>
+            <h4>Reciclagem</h4>
+            <p>Valorização e reciclagem de materiais reutilizáveis</p>
+          </div>
+          <div class="flow-step">
+            <div class="flow-step-num">05</div>
+            <h4>Destino Final</h4>
+            <p>Disposição adequada e segura dos resíduos não recuperáveis</p>
+          </div>
+        </div>
+
+        <div class="env-stats">
+          <div class="env-stat">
+            <div class="env-stat-num">100%</div>
+            <div class="env-stat-label">Conformidade Ambiental</div>
+          </div>
+          <div class="env-stat">
+            <div class="env-stat-num">↑70%</div>
+            <div class="env-stat-label">Taxa de Reciclagem</div>
+          </div>
+          <div class="env-stat">
+            <div class="env-stat-num">0</div>
+            <div class="env-stat-label">Deposições Ilegais</div>
+          </div>
+        </div>
+
+        <div class="serv-solutions" style="margin-top:56px">
+          <div class="serv-sol-card blue-card">
+            <div class="icon"><i class="fa-solid fa-truck-ramp-box"></i></div>
+            <h4>Recolha Municipal</h4>
+            <p>Serviço de recolha de resíduos sólidos urbanos para municípios, comunidades e condominios industriais.</p>
+          </div>
+          <div class="serv-sol-card blue-card">
+            <div class="icon"><i class="fa-solid fa-flask"></i></div>
+            <h4>Resíduos Industriais</h4>
+            <p>Gestão especializada de resíduos industriais, incluindo resíduos perigosos, com toda a documentação legal necessária.</p>
+          </div>
+          <div class="serv-sol-card blue-card">
+            <div class="icon"><i class="fa-solid fa-rotate"></i></div>
+            <h4>Reciclagem</h4>
+            <p>Programa de reciclagem e valorização de materiais como metais, plásticos, papel e vidro com relatórios detalhados.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /servicos -->
+
+
+<!-- ╔═══════════════════════════════════╗ -->
+<!-- ║         PRODUTOS PAGE             ║ -->
+<!-- ╚═══════════════════════════════════╝ -->
+<div class="page" id="page-produtos">
+
+  <section class="page-hero page-hero-orange">
+    <div class="page-hero-grid-line"></div>
+    <div class="container" style="position:relative;z-index:2;text-align:center">
+      <span class="label"><i class="fa-solid fa-boxes-stacked"></i> &nbsp;Catálogo</span>
+      <h1 class="section-title">Nossos <span class="o">Produtos</span></h1>
+      <p style="color:var(--slate);max-width:520px;margin:20px auto 0;font-size:16px;line-height:1.75">
+        Soluções metálicas fabricadas com rigor técnico e materiais de alta qualidade para o setor industrial e municipal.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section-dark">
+    <div class="container">
+      <div class="produtos-grid">
+
+        <div class="produto-card orange-prod" onclick="openModal('p1')">
+          <div class="produto-img">
+            <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=600&auto=format&fit=crop&q=80" alt="Estrutura Metálica">
+            <div class="produto-badge orange-badge">Serralharia</div>
+          </div>
+          <div class="produto-body">
+            <h3>Estruturas Metálicas</h3>
+            <p>Galpões, coberturas e estruturas industriais pré-fabricadas de alta resistência com aço estrutural certificado.</p>
+            <div class="produto-specs">
+              <span class="spec-tag">Aço Estrutural</span>
+              <span class="spec-tag">Alta Resistência</span>
+              <span class="spec-tag">Personalizado</span>
+            </div>
+            <a class="btn btn-primary btn-small">
+              <i class="fa-solid fa-eye"></i> Ver Detalhes
+            </a>
+          </div>
+        </div>
+
+        <div class="produto-card blue-prod" onclick="openModal('p2')">
+          <div class="produto-img">
+            <img src="https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=600&auto=format&fit=crop&q=80" alt="Contentor de Resíduos">
+            <div class="produto-badge blue-badge">Resíduos</div>
+          </div>
+          <div class="produto-body">
+            <h3>Contentores de Resíduos</h3>
+            <p>Contentores metálicos galvanizados para resíduos industriais e municipais, fabricados em Pemba pela equipa Urban.</p>
+            <div class="produto-specs">
+              <span class="spec-tag">800L a 8.000L</span>
+              <span class="spec-tag">Galvanizado</span>
+              <span class="spec-tag">Durável</span>
+            </div>
+            <a class="btn btn-blue btn-small">
+              <i class="fa-solid fa-eye"></i> Ver Detalhes
+            </a>
+          </div>
+        </div>
+
+        <div class="produto-card orange-prod" onclick="openModal('p3')">
+          <div class="produto-img">
+            <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&auto=format&fit=crop&q=80" alt="Reboque">
+            <div class="produto-badge orange-badge">Transporte</div>
+          </div>
+          <div class="produto-body">
+            <h3>Reboques Porta-Contentores</h3>
+            <p>Reboques metálicos para transporte de mini contentores de resíduos, projetados para resistência e facilidade operacional.</p>
+            <div class="produto-specs">
+              <span class="spec-tag">Robusto</span>
+              <span class="spec-tag">Mini-Contentores</span>
+              <span class="spec-tag">Compacto</span>
+            </div>
+            <a class="btn btn-primary btn-small">
+              <i class="fa-solid fa-eye"></i> Ver Detalhes
+            </a>
+          </div>
+        </div>
+
+        <div class="produto-card orange-prod" onclick="openModal('p4')">
+          <div class="produto-img">
+            <img src="https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600&auto=format&fit=crop&q=80" alt="Portão Industrial">
+            <div class="produto-badge orange-badge">Segurança</div>
+          </div>
+          <div class="produto-body">
+            <h3>Portões Industriais</h3>
+            <p>Portões de alta resistência em aço galvanizado ou pintado, manuais ou automatizados, para instalações industriais.</p>
+            <div class="produto-specs">
+              <span class="spec-tag">Correr / Basculante</span>
+              <span class="spec-tag">Automatizado</span>
+              <span class="spec-tag">Galvanizado</span>
+            </div>
+            <a class="btn btn-primary btn-small">
+              <i class="fa-solid fa-eye"></i> Ver Detalhes
+            </a>
+          </div>
+        </div>
+
+        <div class="produto-card orange-prod" onclick="openModal('p5')">
+          <div class="produto-img">
+            <img src="https://images.unsplash.com/photo-1565688534245-05d6b5be184a?w=600&auto=format&fit=crop&q=80" alt="Passarelas">
+            <div class="produto-badge orange-badge">Indústria</div>
+          </div>
+          <div class="produto-body">
+            <h3>Passarelas & Plataformas</h3>
+            <p>Plataformas industriais e passarelas com chapa xadrez antiderrapante e guarda-corpos de segurança conforme normas.</p>
+            <div class="produto-specs">
+              <span class="spec-tag">Antiderrapante</span>
+              <span class="spec-tag">NR-12</span>
+              <span class="spec-tag">Personalizado</span>
+            </div>
+            <a class="btn btn-primary btn-small">
+              <i class="fa-solid fa-eye"></i> Ver Detalhes
+            </a>
+          </div>
+        </div>
+
+        <div class="produto-card blue-prod" onclick="openModal('p6')">
+          <div class="produto-img">
+            <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&auto=format&fit=crop&q=80" alt="Projeto Especial">
+            <div class="produto-badge blue-badge">Especial</div>
+          </div>
+          <div class="produto-body">
+            <h3>Projetos Sob Medida</h3>
+            <p>Soluções metálicas completamente personalizadas para necessidades específicas de cada cliente industrial ou municipal.</p>
+            <div class="produto-specs">
+              <span class="spec-tag">Totalmente Personalizado</span>
+              <span class="spec-tag">Qualidade</span>
+            </div>
+            <a class="btn btn-blue btn-small">
+              <i class="fa-solid fa-eye"></i> Ver Detalhes
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</div><!-- /produtos -->
+
+
+<!-- ╔═══════════════════════════════════╗ -->
+<!-- ║         CONTACTO PAGE             ║ -->
+<!-- ╚═══════════════════════════════════╝ -->
+<div class="page" id="page-contacto">
+
+  <section class="page-hero page-hero-blue">
+    <div class="page-hero-grid-line"></div>
+    <div class="container" style="position:relative;z-index:2;text-align:center">
+      <span class="label label-blue"><i class="fa-solid fa-envelope"></i> &nbsp;Fale Connosco</span>
+      <h1 class="section-title">Entre em <span class="b">Contacto</span></h1>
+      <p style="color:var(--slate);max-width:480px;margin:20px auto 0;font-size:16px;line-height:1.75">
+        A nossa equipa está pronta para responder às suas questões e apresentar a melhor solução para o seu projeto.
+      </p>
+    </div>
+  </section>
+
+  <section class="section-dark">
+    <div class="container">
+      <div class="contacto-grid">
+        <div class="contacto-info">
+          <h3>Informações de <span style="color:var(--orange)">Contacto</span></h3>
+          <p>Estamos sediados em Pemba, Moçambique, e prontos para servir clientes em toda a região norte do país.</p>
+
+          <div class="contact-item">
+            <div class="contact-icon orange-icon"><i class="fa-solid fa-phone"></i></div>
+            <div class="contact-text">
+              <strong>Telefone</strong>
+              <span>(+258) 824 003 219</span><br>
+              <span>(+258) 874 103 219</span>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon blue-icon"><i class="fa-solid fa-envelope"></i></div>
+            <div class="contact-text">
+              <strong>Email</strong>
+              <span>ur.bansnet@gmail.com</span>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon orange-icon"><i class="fa-solid fa-location-dot"></i></div>
+            <div class="contact-text">
+              <strong>Localização</strong>
+              <span>Pemba, Moçambique</span>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon blue-icon"><i class="fa-solid fa-clock"></i></div>
+            <div class="contact-text">
+              <strong>Horário</strong>
+              <span>Segunda–Sexta: 07h30 – 17h30</span><br>
+              <span>Sábado: 08h00 – 12h00</span>
+            </div>
+          </div>
+
+          <div style="margin-top:36px">
+            <a class="btn btn-primary" href="assets/PORTFOLIO.pdf" download style="display:inline-flex;margin-bottom:12px">
+              <i class="fa-solid fa-download"></i> Baixar Portfólio
+            </a>
+          </div>
+        </div>
+
+        <div class="form-card">
+          <h3>Solicitar <span style="color:var(--orange)">Orçamento</span></h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Nome *</label>
+              <input type="text" id="fname" placeholder="O seu nome">
+            </div>
+            <div class="form-group">
+              <label>Empresa</label>
+              <input type="text" id="fempresa" placeholder="Nome da empresa">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Email *</label>
+              <input type="email" id="femail" placeholder="email@exemplo.com">
+            </div>
+            <div class="form-group">
+              <label>Telefone</label>
+              <input type="tel" id="fphone" placeholder="+258 ...">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Tipo de Serviço</label>
+            <select id="fservico">
+              <option value="">Selecione um serviço</option>
+              <option>Serralharia Industrial</option>
+              <option>Gestão de Resíduos</option>
+              <option>Fabrico de Contentores</option>
+              <option>Reboques / Trailers</option>
+              <option>Portões / Grades</option>
+              <option>Projetos Especiais</option>
+              <option>Outro</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Mensagem *</label>
+            <textarea id="fmsg" placeholder="Descreva o seu projeto ou necessidade..."></textarea>
+          </div>
+          <button class="btn btn-primary" onclick="submitForm()" style="width:100%;justify-content:center;padding:16px">
+            <i class="fa-solid fa-paper-plane"></i> Enviar Mensagem
+          </button>
+          <div class="success-msg" id="successMsg">
+            <i class="fa-solid fa-circle-check"></i>
+            Mensagem enviada! Entraremos em contacto brevemente.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /contacto -->
+
+</div><!-- /#app -->
+
+
+<!-- ═══════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════ -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="assets/logourban.png" alt="Urban Gestão de Instalações">
+        <p>Empresa moçambicana especializada em Serralharia Industrial e Gestão de Resíduos, comprometida com qualidade e desenvolvimento sustentável.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Serviços</h4>
+        <ul>
+          <li><a onclick="navigate('servicos')">Serralharia Industrial</a></li>
+          <li><a onclick="navigate('servicos');openServTab('tab-residuos',document.querySelector('.serv-tab-btn:nth-child(2)'))">Gestão de Resíduos</a></li>
+          <li><a onclick="navigate('produtos')">Contentores Metálicos</a></li>
+          <li><a onclick="navigate('produtos')">Projetos Especiais</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Empresa</h4>
+        <ul>
+          <li><a onclick="navigate('sobre')">Quem Somos</a></li>
+          <li><a onclick="navigate('sobre')">Missão & Valores</a></li>
+          <li><a onclick="navigate('sobre')">Portfólio</a></li>
+          <li><a onclick="navigate('contacto')">Contacto</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contacto</h4>
+        <ul>
+          <li><a href="tel:+258824003219">(+258) 824 003 219</a></li>
+          <li><a href="tel:+258874103219">(+258) 874 103 219</a></li>
+          <li><a href="mailto:ur.bansnet@gmail.com">ur.bansnet@gmail.com</a></li>
+          <li><a>Pemba, Moçambique</a></li>
+          <li><a href="assets/PORTFOLIO.pdf" download style="color:var(--orange)"><i class="fa-solid fa-download"></i> Baixar Portfólio</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 URBAN Gestão de Instalações — Todos os direitos reservados.</p>
+      <p>Pemba, Moçambique — ur.bansnet@gmail.com</p>
+    </div>
+  </div>
+</footer>
+
+<!-- BACK TO TOP -->
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <i class="fa-solid fa-chevron-up"></i>
+</button>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modalBox">
+    <div class="modal-header">
+      <h2 id="modalTitle">Produto</h2>
+      <button class="modal-close" onclick="closeModalBtn()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+   JAVASCRIPT
+═══════════════════════════════════════════ -->
+<script>
+/* ── NAVIGATION ── */
+const pages = ['home','sobre','servicos','produtos','contacto'];
+
+function navigate(page) {
+  pages.forEach(p => {
+    const el = document.getElementById('page-' + p);
+    const nav = document.getElementById('nav-' + p);
+    if (el) el.classList.toggle('active', p === page);
+    if (nav) nav.classList.toggle('active', p === page);
+  });
+  window.scrollTo({ top: 0, behavior: 'instant' });
+  // Close mobile menu if open
+  const menu = document.getElementById('mobileMenu');
+  const btn = document.getElementById('hamburger');
+  if (menu.classList.contains('open')) {
+    menu.classList.remove('open');
+    btn.classList.remove('open');
+  }
+}
+
+/* ── HAMBURGER ── */
+function toggleMobile() {
+  const btn = document.getElementById('hamburger');
+  const menu = document.getElementById('mobileMenu');
+  btn.classList.toggle('open');
+  menu.classList.toggle('open');
+}
+
+/* ── SCROLL ── */
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('navbar');
+  const bt = document.getElementById('backTop');
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+  bt.classList.toggle('show', window.scrollY > 400);
+});
+
+/* ── SOBRE TABS ── */
+function openTab(id, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+/* ── SERVIÇOS TABS ── */
+function openServTab(id, btn) {
+  document.querySelectorAll('.serv-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.serv-tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+/* ── PRODUTOS MODAIS ── */
+const produtos = {
+  p1: {
+    title: 'Estruturas Metálicas',
+    img: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=600&auto=format&fit=crop&q=80',
+    desc: 'Sistema de estruturas metálicas pré-fabricadas de alta resistência projetado para galpões, armazéns, hangares e instalações industriais. Combina agilidade de montagem com robustez estrutural comprovada em projetos de grande porte na região de Pemba.',
+    specs: [
+      ['Material', 'Aço estrutural certificado'],
+      ['Aplicação', 'Galpões, coberturas, hangares'],
+      ['Acabamento', 'Pintura epóxi industrial + anticorrosivo'],
+      ['Prazo médio', 'Conforme dimensão do projeto'],
+      ['Origem', 'Fabricado em Pemba, Moçambique'],
+      ['Garantia', 'Estrutural + acabamento'],
+    ]
+  },
+  p2: {
+    title: 'Contentores de Resíduos',
+    img: 'https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=600&auto=format&fit=crop&q=80',
+    desc: 'Contentores metálicos para segregação, acondicionamento e recolha de resíduos industriais e municipais. Fabricados em Pemba pela equipa Urban com aço galvanizado de alta durabilidade.',
+    specs: [
+      ['Capacidade', 'Mini, médio e grande volume'],
+      ['Material', 'Aço galvanizado de alta durabilidade'],
+      ['Mobilidade', 'Rodas giratórias com sistema de freio'],
+      ['Acabamento', 'Galvanização + pintura epóxi'],
+      ['Cores', 'Conforme necessidade do cliente'],
+      ['Garantia', 'Estrutural 3 anos'],
+    ]
+  },
+  p3: {
+    title: 'Reboques Porta-Contentores',
+    img: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&auto=format&fit=crop&q=80',
+    desc: 'Reboques metálicos especialmente projetados para transporte de mini contentores de resíduos. Design funcional com sistema de basculamento para descarga facilitada, fabricados pela Urban em Pemba.',
+    specs: [
+      ['Capacidade', 'Até 2 mini contentores'],
+      ['Sistema', 'Basculamento hidráulico / mecânico'],
+      ['Material', 'Aço estrutural + pintura epóxi'],
+      ['Pneus', 'Rodado duplo reforçado'],
+      ['Engate', 'Universal 50mm'],
+      ['Origem', 'Fabricado em Pemba, Moçambique'],
+    ]
+  },
+  p4: {
+    title: 'Portões Industriais',
+    img: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600&auto=format&fit=crop&q=80',
+    desc: 'Portões industriais de alta resistência em aço galvanizado ou pintado, disponíveis em versão manual ou com sistema de automação. Adequados para entradas industriais, zonas de armazenamento e instalações empresariais.',
+    specs: [
+      ['Tipos', 'Correr, basculante, articulado, dobradiça'],
+      ['Material', 'Aço galvanizado ou aço carbono pintado'],
+      ['Automação', 'Motor elétrico disponível'],
+      ['Acabamento', 'Galvanização + epóxi ou pintado'],
+      ['Medidas', 'Sob medida conforme projeto'],
+      ['Garantia', '3 anos mecanismo, 5 anos estrutura'],
+    ]
+  },
+  p5: {
+    title: 'Passarelas & Plataformas',
+    img: 'https://images.unsplash.com/photo-1565688534245-05d6b5be184a?w=600&auto=format&fit=crop&q=80',
+    desc: 'Passarelas e plataformas metálicas com piso em chapa xadrez antiderrapante, guarda-corpo e rodapé de segurança. Projetadas para acesso seguro a equipamentos, linhas de processo e áreas elevadas.',
+    specs: [
+      ['Material', 'Aço carbono ou inox'],
+      ['Piso', 'Chapa xadrez antiderrapante'],
+      ['Guarda-corpo', 'Tubo com travessa e rodapé'],
+      ['Normas', 'Conforme normas de segurança'],
+      ['Dimensões', 'Customizável conforme projeto'],
+      ['Garantia', '5 anos estrutural'],
+    ]
+  },
+  p6: {
+    title: 'Projetos Sob Medida',
+    img: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&auto=format&fit=crop&q=80',
+    desc: 'A Urban desenvolve qualquer solução metálica personalizada para as suas necessidades específicas. Da conceção ao fabrico, garantimos rigor técnico, qualidade de materiais e prazo cumprido.',
+    specs: [
+      ['Escopo', 'Totalmente personalizado'],
+      ['Processo', 'Conceção → Fabrico → Entrega'],
+      ['Materiais', 'Aço carbono, inox, galvanizado'],
+      ['Setores', 'Industrial, municipal, petrolífero'],
+      ['Prazo', 'Conforme complexidade do projeto'],
+      ['Orçamento', 'Solicite uma proposta gratuita'],
+    ]
+  }
+};
+
+function openModal(id) {
+  const p = produtos[id];
+  document.getElementById('modalTitle').textContent = p.title;
+  document.getElementById('modalBody').innerHTML = `
+    <div class="modal-grid">
+      <div class="modal-img"><img src="${p.img}" alt="${p.title}"></div>
+      <div class="modal-info">
+        <h3><i class="fa-solid fa-circle-info" style="margin-right:8px"></i>Descrição</h3>
+        <p>${p.desc}</p>
+        <h3 style="margin-top:16px"><i class="fa-solid fa-list" style="margin-right:8px"></i>Especificações</h3>
+        <table class="modal-specs-table">
+          ${p.specs.map(s=>`<tr><td>${s[0]}</td><td>${s[1]}</td></tr>`).join('')}
+        </table>
+        <button class="btn btn-primary" style="margin-top:24px;width:100%;justify-content:center" onclick="navigate('contacto');closeModalBtn()">
+          <i class="fa-solid fa-paper-plane"></i> Solicitar Orçamento
+        </button>
+      </div>
+    </div>
+  `;
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModalBtn();
+}
+function closeModalBtn() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ── FORM ── */
+function submitForm() {
+  const name = document.getElementById('fname').value.trim();
+  const email = document.getElementById('femail').value.trim();
+  const msg = document.getElementById('fmsg').value.trim();
+  if (!name || !email || !msg) {
+    alert('Por favor, preencha os campos obrigatórios: Nome, Email e Mensagem.');
+    return;
+  }
+  const s = document.getElementById('successMsg');
+  s.classList.add('show');
+  setTimeout(() => s.classList.remove('show'), 5000);
+  document.getElementById('fname').value = '';
+  document.getElementById('femail').value = '';
+  document.getElementById('fphone').value = '';
+  document.getElementById('fempresa').value = '';
+  document.getElementById('fservico').value = '';
+  document.getElementById('fmsg').value = '';
+}
+
+/* ── KEYBOARD ── */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModalBtn();
+});
+</script>
+</body>
+</html>

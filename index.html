@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
+<link rel="shortcut icon" href="./assets/logourban.png" type="image/x-icon">
 <style>
 /* ═══════════════════════════════════════════
    RESET & VARIABLES
@@ -186,7 +186,7 @@ body {
   backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
   transition: var(--transition);
-  padding: 1rem ;
+  padding: 1rem;
 }
 #navbar.scrolled {
   box-shadow: var(--shadow);
@@ -618,9 +618,12 @@ body {
 ═══════════════════════════════════════════ */
 .diff-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 24px;
   margin-top: 52px;
+  max-width: 960px;
+  margin-left: auto;
+  margin-right: auto;
 }
 .diff-card {
   background: var(--white);
@@ -1440,6 +1443,64 @@ footer {
   .contact-form { padding: 24px; }
   .contact-info-card { padding: 24px; }
 }
+/* ═══════════════════════════════════════════
+   CAROUSEL
+═══════════════════════════════════════════ */
+.carousel-wrap {
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+}
+.carousel-track {
+  display: flex;
+  gap: 20px;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+.carousel-track .porto-card {
+  flex-shrink: 0;
+  min-width: 0;
+}
+.carousel-nav { display: flex; gap: 8px; }
+.c-btn {
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  color: var(--text-mid);
+  font-size: 14px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+}
+.c-btn:hover { background: var(--orange); color: #fff; border-color: var(--orange); }
+.c-btn:disabled { opacity: 0.3; pointer-events: none; }
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 24px;
+}
+.carousel-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--border-strong);
+  cursor: pointer;
+  transition: var(--transition);
+  border: none;
+  padding: 0;
+}
+.carousel-dot.active {
+  background: var(--orange);
+  width: 24px;
+  border-radius: 4px;
+}
+@media (max-width: 900px) {
+  .carousel-track .porto-card { flex-shrink: 0; }
+}
+@media (max-width: 600px) {
+  .carousel-track .porto-card { flex-shrink: 0; }
+}
 </style>
 </head>
 <body>
@@ -1465,10 +1526,6 @@ footer {
           <div class="dropdown">
             <a onclick="navigate('servicos');openServTab('serv-serralharia',null)"><i class="fa-solid fa-screwdriver-wrench"></i>Serralharia Industrial</a>
             <a onclick="navigate('servicos');openServTab('serv-residuos',null)"><i class="fa-solid fa-recycle blue-item"></i>Gestão de Resíduos</a>
-            <div class="dropdown-divider"></div>
-            <a onclick="navigate('servicos');openServTab('serv-serralharia',null);openSubTab('sub-estruturas',null)"><i class="fa-solid fa-building"></i>Estruturas Metálicas</a>
-            <a onclick="navigate('servicos');openServTab('serv-serralharia',null);openSubTab('sub-soldadura',null)"><i class="fa-solid fa-fire-flame-curved"></i>Soldadura e Montagem</a>
-            <a onclick="navigate('servicos');openServTab('serv-serralharia',null);openSubTab('sub-manutencao',null)"><i class="fa-solid fa-gear"></i>Manutenção Industrial</a>
           </div>
         </li>
         <li>
@@ -1531,7 +1588,7 @@ footer {
           <span class="line"><span class="o">Industriais</span></span>
           <span class="line">de <span class="b">Excelência</span></span>
         </h1>
-        <p class="hero-sub">Serralharia industrial de precisão e gestão integrada de resíduos. Compromisso com qualidade, segurança e sustentabilidade em cada projeto.</p>
+        <p class="hero-sub">Serralharia industrial de precisão e gestão integrada de resíduos. Compromisso com qualidade, segurança e sustentabilidade em cada projecto.</p>
         <div class="hero-actions">
           <a class="btn btn-primary btn-lg" onclick="navigate('contacto')">
             <i class="fa-solid fa-paper-plane"></i> Solicitar Orçamento
@@ -1547,7 +1604,7 @@ footer {
           </div>
           <div class="stat">
             <div class="stat-num"><span class="b">50</span>+</div>
-            <div class="stat-label">Projetos concluídos</div>
+            <div class="stat-label">Projectos concluídos</div>
           </div>
           <div class="stat">
             <div class="stat-num"><span class="o">100</span>%</div>
@@ -1588,11 +1645,11 @@ footer {
           <span class="eyebrow">Quem Somos</span>
           <h2 class="section-title">A URBAN ao seu <span class="o">serviço</span></h2>
           <p>Somos uma empresa moçambicana dedicada à prestação de serviços de Serralharia Industrial e Gestão de Resíduos, comprometida com a qualidade, eficiência e responsabilidade ambiental.</p>
-          <p>Atuamos com o objetivo de oferecer soluções completas que respondam às necessidades do setor industrial e contribuam para o desenvolvimento sustentável da região.</p>
+          <p>Actuamos com o objectivo de oferecer soluções completas que respondam às necessidades do setor industrial e contribuam para o desenvolvimento sustentável da região.</p>
           <ul class="about-bullets">
             <li>Equipa técnica altamente qualificada</li>
             <li>Fabricação local em Pemba, Moçambique</li>
-            <li>Projetos personalizados às suas necessidades</li>
+            <li>Projectos personalizados às suas necessidades</li>
             <li>Compromisso com normas de segurança</li>
           </ul>
           <a class="btn btn-ghost-orange" onclick="navigate('sobre')">Saiba Mais <i class="fa-solid fa-arrow-right"></i></a>
@@ -1606,12 +1663,12 @@ footer {
     <div class="container">
       <span class="eyebrow">O que fazemos</span>
       <h2 class="section-title">Nossos <span class="o">Serviços</span></h2>
-      <p class="section-sub">Duas áreas de atuação complementares para responder às necessidades do setor industrial e ambiental.</p>
+      <p class="section-sub">Duas áreas de actuação complementares para responder às necessidades do setor industrial e ambiental.</p>
       <div class="services-grid">
         <div class="service-card orange-card" onclick="navigate('servicos');openServTab('serv-serralharia',null)">
           <div class="service-icon orange-icon"><i class="fa-solid fa-screwdriver-wrench"></i></div>
           <h3>Serralharia Industrial</h3>
-          <p>Conceção, fabrico e montagem de estruturas metálicas, portões, passarelas e componentes industriais com elevados padrões de resistência e durabilidade.</p>
+          <p>Concepção, fabrico e montagem de estruturas metálicas, portões, passarelas e componentes industriais com elevados padrões de resistência e durabilidade.</p>
           <div class="arrow-link">Ver mais <i class="fa-solid fa-arrow-right"></i></div>
         </div>
         <div class="service-card blue-card" onclick="navigate('servicos');openServTab('serv-residuos',null)">
@@ -1642,13 +1699,13 @@ footer {
       <div style="text-align:center;max-width:600px;margin:0 auto">
         <span class="eyebrow">Porquê a URBAN</span>
         <h2 class="section-title">Nossos <span class="b">Diferenciais</span></h2>
-        <p class="section-sub" style="margin:0 auto">O que nos distingue e faz a diferença nos projetos dos nossos clientes.</p>
+        <p class="section-sub" style="margin:0 auto">O que nos distingue e faz a diferença nos projectos dos nossos clientes.</p>
       </div>
       <div class="diff-grid">
         <div class="diff-card">
           <div class="diff-icon diff-icon-o"><i class="fa-solid fa-medal"></i></div>
           <h4>Qualidade Garantida</h4>
-          <p>Utilizamos materiais certificados e processos técnicos rigorosos em cada etapa do projeto, garantindo resultados duradouros.</p>
+          <p>Utilizamos materiais certificados e processos técnicos rigorosos em cada etapa do projecto, garantindo resultados duradouros.</p>
         </div>
         <div class="diff-card">
           <div class="diff-icon diff-icon-b"><i class="fa-solid fa-users-gear"></i></div>
@@ -1658,12 +1715,12 @@ footer {
         <div class="diff-card">
           <div class="diff-icon diff-icon-o"><i class="fa-solid fa-calendar-check"></i></div>
           <h4>Cumprimento de Prazos</h4>
-          <p>Planeamento rigoroso e gestão eficiente de cada projeto para entrega no prazo acordado, sem comprometer a qualidade.</p>
+          <p>Planeamento rigoroso e gestão eficiente de cada projecto para entrega no prazo acordado, sem comprometer a qualidade.</p>
         </div>
         <div class="diff-card">
           <div class="diff-icon diff-icon-g"><i class="fa-solid fa-sliders"></i></div>
           <h4>Soluções Personalizadas</h4>
-          <p>Adaptamos cada projeto às especificidades do cliente, desde a conceção até à entrega final, com rigor técnico total.</p>
+          <p>Adaptamos cada projecto às especificidades do cliente, desde a concepção até à entrega final, com rigor técnico total.</p>
         </div>
         <div class="diff-card">
           <div class="diff-icon diff-icon-b"><i class="fa-solid fa-leaf"></i></div>
@@ -1748,7 +1805,7 @@ footer {
         <div class="step">
           <div class="step-num step-num-o">1</div>
           <h4>Pedido de Orçamento</h4>
-          <p>Contacte-nos por WhatsApp, email ou formulário com os detalhes do seu projeto.</p>
+          <p>Contacte-nos por WhatsApp, email ou formulário com os detalhes do seu projecto.</p>
         </div>
         <div class="step">
           <div class="step-num step-num-b">2</div>
@@ -1758,12 +1815,12 @@ footer {
         <div class="step">
           <div class="step-num step-num-o">3</div>
           <h4>Execução</h4>
-          <p>Iniciamos o projeto com a equipa técnica especializada, respeitando rigorosamente os prazos.</p>
+          <p>Iniciamos o projecto com a equipa técnica especializada, respeitando rigorosamente os prazos.</p>
         </div>
         <div class="step">
           <div class="step-num step-num-b">4</div>
           <h4>Entrega & Suporte</h4>
-          <p>Entregamos o projeto finalizado e oferecemos suporte pós-entrega para máxima satisfação.</p>
+          <p>Entregamos o projecto finalizado e oferecemos suporte pós-entrega para máxima satisfação.</p>
         </div>
       </div>
     </div>
@@ -1772,43 +1829,70 @@ footer {
   <!-- PORTFÓLIO -->
   <section class="section section-alt">
     <div class="container">
-      <span class="eyebrow">Portfólio</span>
-      <h2 class="section-title">Projetos <span class="o">Realizados</span></h2>
-      <p class="section-sub">Alguns dos trabalhos executados pela nossa equipa em Pemba e região.</p>
-      <div class="porto-grid">
-        <div class="porto-card">
-          <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=600&auto=format&fit=crop&q=80" alt="Estrutura Metálica">
-          <div class="porto-bottom"><span class="porto-badge-img">SERRALHARIA</span></div>
-          <div class="porto-overlay">
-            <div class="porto-label">Serralharia Industrial</div>
-            <div class="porto-title">Fabrico de Estrutura Metálica — Pemba</div>
-          </div>
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:44px">
+        <div>
+          <span class="eyebrow">Portfólio</span>
+          <h2 class="section-title">Projectos <span class="o">Realizados</span></h2>
+          <p class="section-sub">Alguns dos trabalhos executados pela nossa equipa em Pemba e região.</p>
         </div>
-        <div class="porto-card">
-          <img src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=600&auto=format&fit=crop&q=80" alt="Contentores">
-          <div class="porto-bottom"><span class="porto-badge-img">RESÍDUOS</span></div>
-          <div class="porto-overlay">
-            <div class="porto-label">Gestão de Resíduos</div>
-            <div class="porto-title">Fabrico de Contentores de Lixo — Pemba</div>
-          </div>
+        <div class="carousel-nav">
+          <button class="c-btn" id="prevBtn" onclick="carouselMove(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+          <button class="c-btn" id="nextBtn" onclick="carouselMove(1)"><i class="fa-solid fa-chevron-right"></i></button>
         </div>
-        <div class="porto-card">
-          <img src="https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600&auto=format&fit=crop&q=80" alt="Reboque">
-          <div class="porto-bottom"><span class="porto-badge-img">TRANSPORTE</span></div>
-          <div class="porto-overlay">
-            <div class="porto-label">Equipamentos</div>
-            <div class="porto-title">Reboque Porta Mini Contentores — Pemba</div>
+      </div>
+      <div class="carousel-wrap">
+        <div class="carousel-track" id="carouselTrack">
+          <div class="porto-card">
+            <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=700&auto=format&fit=crop&q=80" alt="Estrutura Metálica">
+            <div class="porto-bottom"><span class="porto-badge-img">SERRALHARIA</span></div>
+            <div class="porto-overlay">
+              <div class="porto-label">Serralharia Industrial</div>
+              <div class="porto-title">Fabrico de Estrutura Metálica — Pemba</div>
+            </div>
           </div>
-        </div>
-        <div class="porto-card">
-          <img src="https://images.unsplash.com/photo-1565688534245-05d6b5be184a?w=600&auto=format&fit=crop&q=80" alt="Montagem">
-          <div class="porto-bottom"><span class="porto-badge-img">MONTAGEM</span></div>
-          <div class="porto-overlay">
-            <div class="porto-label">Serralharia</div>
-            <div class="porto-title">Montagem de Estrutura Metálica — Pemba</div>
+          <div class="porto-card">
+            <img src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=700&auto=format&fit=crop&q=80" alt="Contentores">
+            <div class="porto-bottom"><span class="porto-badge-img">RESÍDUOS</span></div>
+            <div class="porto-overlay">
+              <div class="porto-label">Gestão de Resíduos</div>
+              <div class="porto-title">Fabrico de Contentores de Lixo — Pemba</div>
+            </div>
+          </div>
+          <div class="porto-card">
+            <img src="https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=700&auto=format&fit=crop&q=80" alt="Reboque">
+            <div class="porto-bottom"><span class="porto-badge-img">TRANSPORTE</span></div>
+            <div class="porto-overlay">
+              <div class="porto-label">Equipamentos</div>
+              <div class="porto-title">Reboque Porta Mini Contentores — Pemba</div>
+            </div>
+          </div>
+          <div class="porto-card">
+            <img src="https://images.unsplash.com/photo-1565688534245-05d6b5be184a?w=700&auto=format&fit=crop&q=80" alt="Montagem">
+            <div class="porto-bottom"><span class="porto-badge-img">MONTAGEM</span></div>
+            <div class="porto-overlay">
+              <div class="porto-label">Serralharia</div>
+              <div class="porto-title">Montagem de Estrutura Metálica — Pemba</div>
+            </div>
+          </div>
+          <div class="porto-card">
+            <img src="https://images.unsplash.com/photo-1581094288338-2314dddb7ece?w=700&auto=format&fit=crop&q=80" alt="Soldadura">
+            <div class="porto-bottom"><span class="porto-badge-img">SOLDADURA</span></div>
+            <div class="porto-overlay">
+              <div class="porto-label">Serralharia Industrial</div>
+              <div class="porto-title">Soldadura Industrial de Precisão — Pemba</div>
+            </div>
+          </div>
+          <div class="porto-card">
+            <img src="https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=700&auto=format&fit=crop&q=80" alt="Reciclagem">
+            <div class="porto-bottom"><span class="porto-badge-img">RECICLAGEM</span></div>
+            <div class="porto-overlay">
+              <div class="porto-label">Gestão de Resíduos</div>
+              <div class="porto-title">Sistema de Triagem e Reciclagem — Pemba</div>
+            </div>
           </div>
         </div>
       </div>
+      <div class="carousel-dots" id="carouselDots"></div>
     </div>
   </section>
 
@@ -1850,7 +1934,7 @@ footer {
           <div class="testi-stars">
             <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i>
           </div>
-          <p class="testi-text">"O reboque porta-contentores foi fabricado exatamente conforme especificamos. Solução muito bem pensada para as nossas necessidades de logística."</p>
+          <p class="testi-text">"O reboque porta-contentores foi fabricado exactamente conforme especificamos. Solução muito bem pensada para as nossas necessidades de logística."</p>
           <div class="testi-author">
             <div class="testi-avatar">JS</div>
             <div>
@@ -1915,7 +1999,7 @@ footer {
           <span class="eyebrow">Quem Somos</span>
           <h1 style="font-family:var(--font-display);font-size:clamp(32px,5vw,54px);font-weight:800;color:var(--text);letter-spacing:-2px;line-height:1.1;margin-bottom:20px">Sobre a <span style="color:var(--orange)">URBAN</span> Gestão de Instalações</h1>
           <p style="font-size:17px;color:var(--text-mid);line-height:1.8;margin-bottom:16px">Somos uma empresa moçambicana dedicada à prestação de serviços de Serralharia Industrial e Gestão de Resíduos, comprometida com a qualidade, eficiência e responsabilidade ambiental.</p>
-          <p style="font-size:16px;color:var(--text-mid);line-height:1.8;margin-bottom:32px">Atuamos com o objetivo de oferecer soluções completas que respondam às necessidades do setor industrial e contribuam para o desenvolvimento sustentável das comunidades de Pemba e região.</p>
+          <p style="font-size:16px;color:var(--text-mid);line-height:1.8;margin-bottom:32px">Actuamos com o objectivo de oferecer soluções completas que respondam às necessidades do setor industrial e contribuam para o desenvolvimento sustentável das comunidades de Pemba e região.</p>
           <div style="display:flex;gap:12px;flex-wrap:wrap">
             <a class="btn btn-primary" onclick="navigate('contacto')"><i class="fa-solid fa-paper-plane"></i> Entrar em Contacto</a>
             <a class="btn btn-outline" onclick="navigate('servicos')">Ver Serviços</a>
@@ -1964,11 +2048,11 @@ footer {
           <span class="eyebrow">Experiência</span>
           <h2 class="section-title">Anos de <span class="b">Trabalho</span> na Região</h2>
           <p style="color:var(--text-mid);line-height:1.8;margin-bottom:16px">Com mais de 5 anos de experiência no setor, a URBAN tem construído uma sólida reputação em Pemba e em toda a região norte de Moçambique.</p>
-          <p style="color:var(--text-mid);line-height:1.8;margin-bottom:28px">A nossa equipa técnica é composta por profissionais especializados e continuamente formados, garantindo os mais elevados padrões de qualidade em cada projeto.</p>
+          <p style="color:var(--text-mid);line-height:1.8;margin-bottom:28px">A nossa equipa técnica é composta por profissionais especializados e continuamente formados, garantindo os mais elevados padrões de qualidade em cada projecto.</p>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
             <div style="background:var(--orange-light);border-radius:12px;padding:22px 20px;text-align:center">
               <div style="font-family:var(--font-display);font-size:36px;font-weight:800;color:var(--orange)">50+</div>
-              <div style="font-size:13px;color:var(--text-mid);font-weight:600">Projetos Realizados</div>
+              <div style="font-size:13px;color:var(--text-mid);font-weight:600">Projectos Realizados</div>
             </div>
             <div style="background:var(--blue-light);border-radius:12px;padding:22px 20px;text-align:center">
               <div style="font-family:var(--font-display);font-size:36px;font-weight:800;color:var(--blue)">100%</div>
@@ -1988,7 +2072,7 @@ footer {
     <div class="container">
       <div class="cta-inner">
         <h2 class="section-title">Quer saber <span class="o">mais</span>?</h2>
-        <p class="section-sub">Contacte-nos e descubra como a URBAN pode ajudar no seu próximo projeto industrial.</p>
+        <p class="section-sub">Contacte-nos e descubra como a URBAN pode ajudar no seu próximo projecto industrial.</p>
         <div class="cta-actions">
           <a class="btn btn-primary btn-lg" onclick="navigate('contacto')"><i class="fa-solid fa-phone"></i> Fale Connosco</a>
           <a class="btn btn-wh-outline btn-lg" href="https://wa.me/258824003219" target="_blank"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
@@ -2036,7 +2120,7 @@ footer {
           <button class="sub-tab-btn" onclick="openSubTab('sub-equipamentos',this)">Equipamentos Industriais</button>
           <button class="sub-tab-btn" onclick="openSubTab('sub-soldadura',this)">Soldadura & Montagem</button>
           <button class="sub-tab-btn" onclick="openSubTab('sub-manutencao',this)">Manutenção Industrial</button>
-          <button class="sub-tab-btn" onclick="openSubTab('sub-especiais',this)">Projetos Especiais</button>
+          <button class="sub-tab-btn" onclick="openSubTab('sub-especiais',this)">Projectos Especiais</button>
         </div>
 
         <div class="sub-content active" id="sub-estruturas">
@@ -2045,8 +2129,8 @@ footer {
             <div class="serv-detail-content">
               <span class="eyebrow">Serralharia</span>
               <h3>Estruturas Metálicas</h3>
-              <p>Conceção, fabrico e montagem de estruturas metálicas pré-fabricadas de alta resistência para galpões industriais, armazéns, coberturas e instalações de grande porte.</p>
-              <p>Cada projeto é desenvolvido com rigor técnico e adaptado às especificidades do terreno e às exigências funcionais do cliente.</p>
+              <p>Concepção, fabrico e montagem de estruturas metálicas pré-fabricadas de alta resistência para galpões industriais, armazéns, coberturas e instalações de grande porte.</p>
+              <p>Cada projecto é desenvolvido com rigor técnico e adaptado às especificidades do terreno e às exigências funcionais do cliente.</p>
               <ul class="serv-includes">
                 <li><i class="fa-solid fa-check-circle"></i> Estruturas para galpões e armazéns industriais</li>
                 <li><i class="fa-solid fa-check-circle"></i> Coberturas e telhados metálicos</li>
@@ -2137,15 +2221,15 @@ footer {
 
         <div class="sub-content" id="sub-especiais">
           <div class="serv-detail-grid">
-            <div class="serv-detail-img"><img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=700&auto=format&fit=crop&q=80" alt="Projetos Especiais"></div>
+            <div class="serv-detail-img"><img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=700&auto=format&fit=crop&q=80" alt="Projectos Especiais"></div>
             <div class="serv-detail-content">
               <span class="eyebrow">Sob Medida</span>
-              <h3>Projetos Especiais</h3>
-              <p>Desenvolvemos qualquer solução metálica personalizada para as suas necessidades específicas. Da conceção ao fabrico, garantimos rigor técnico e qualidade em projetos complexos.</p>
+              <h3>Projectos Especiais</h3>
+              <p>Desenvolvemos qualquer solução metálica personalizada para as suas necessidades específicas. Da concepção ao fabrico, garantimos rigor técnico e qualidade em projectos complexos.</p>
               <ul class="serv-includes">
-                <li><i class="fa-solid fa-check-circle"></i> Conceção técnica e desenhos de execução</li>
+                <li><i class="fa-solid fa-check-circle"></i> Concepção técnica e desenhos de execução</li>
                 <li><i class="fa-solid fa-check-circle"></i> Fabricação de protótipos e séries</li>
-                <li><i class="fa-solid fa-check-circle"></i> Projetos para setor petrolífero e gás</li>
+                <li><i class="fa-solid fa-check-circle"></i> Projectos para setor petrolífero e gás</li>
                 <li><i class="fa-solid fa-check-circle"></i> Estruturas especiais para eventos e exposições</li>
                 <li><i class="fa-solid fa-check-circle"></i> Consultoria técnica especializada</li>
               </ul>
@@ -2367,12 +2451,12 @@ footer {
 
         <div class="prod-card" data-cat="metalicos" onclick="openModal('p6')">
           <div class="prod-img-wrap">
-            <img class="prod-img" src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&auto=format&fit=crop&q=80" alt="Projetos Especiais">
+            <img class="prod-img" src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&auto=format&fit=crop&q=80" alt="Projectos Especiais">
             <div class="prod-badge"><span class="tag">Sob Medida</span></div>
           </div>
           <div class="prod-body">
-            <h3>Projetos Sob Medida</h3>
-            <p>Qualquer solução metálica personalizada para as suas necessidades. Da conceção ao fabrico.</p>
+            <h3>Projectos Sob Medida</h3>
+            <p>Qualquer solução metálica personalizada para as suas necessidades. Da concepção ao fabrico.</p>
             <div class="prod-cta">
               <span class="prod-cta-link">Ver detalhes <i class="fa-solid fa-arrow-right"></i></span>
               <span class="btn btn-sm btn-ghost-orange" onclick="event.stopPropagation();navigate('contacto')">Orçamento</span>
@@ -2523,12 +2607,12 @@ footer {
                 <option>Gestão de Resíduos — Reciclagem</option>
                 <option>Produtos — Contentores</option>
                 <option>Produtos — Reboques</option>
-                <option>Projeto Especial / Outro</option>
+                <option>Projecto Especial / Outro</option>
               </select>
             </div>
             <div class="form-group">
               <label for="fmsg">Mensagem *</label>
-              <textarea id="fmsg" placeholder="Descreva o seu projeto ou necessidade..."></textarea>
+              <textarea id="fmsg" placeholder="Descreva o seu projecto ou necessidade..."></textarea>
             </div>
             <button class="btn btn-primary" style="width:100%;justify-content:center;padding:15px" onclick="submitForm()">
               <i class="fa-solid fa-paper-plane"></i> Enviar Mensagem
@@ -2598,7 +2682,7 @@ footer {
     </div>
     <div class="footer-bottom">
       <p>© 2025 URBAN Gestão de Instalações — Todos os direitos reservados. Pemba, Moçambique.</p>
-      <p>Feito com <span style="color:var(--orange)">Salimo Carvalho</span></p>
+      <p>Feito com <span style="color:var(--orange)">♥</span> em Moçambique</p>
     </div>
   </div>
 </footer>
@@ -2702,7 +2786,7 @@ const produtos = {
   p1: {
     title: 'Estruturas Metálicas',
     img: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=600&auto=format&fit=crop&q=80',
-    desc: 'Sistema de estruturas metálicas pré-fabricadas de alta resistência projetado para galpões, armazéns, hangares e instalações industriais. Combina agilidade de montagem com robustez estrutural comprovada em projetos de grande porte na região de Pemba.',
+    desc: 'Sistema de estruturas metálicas pré-fabricadas de alta resistência projetado para galpões, armazéns, hangares e instalações industriais. Combina agilidade de montagem com robustez estrutural comprovada em projectos de grande porte na região de Pemba.',
     specs: [
       ['Material', 'Aço estrutural certificado'],
       ['Aplicação', 'Galpões, coberturas, hangares'],
@@ -2743,7 +2827,7 @@ const produtos = {
       ['Tipos', 'Correr, basculante, articulado'],
       ['Material', 'Aço galvanizado ou carbono pintado'],
       ['Automação', 'Motor elétrico disponível'],
-      ['Medidas', 'Sob medida conforme projeto'],
+      ['Medidas', 'Sob medida conforme projecto'],
       ['Garantia', '3 anos mecanismo, 5 anos estrutura'],
     ]
   },
@@ -2755,17 +2839,17 @@ const produtos = {
       ['Material', 'Aço carbono ou inox'],
       ['Piso', 'Chapa xadrez antiderrapante'],
       ['Guarda-corpo', 'Tubo com travessa e rodapé'],
-      ['Dimensões', 'Customizável conforme projeto'],
+      ['Dimensões', 'Customizável conforme projecto'],
       ['Garantia', '5 anos estrutural'],
     ]
   },
   p6: {
-    title: 'Projetos Sob Medida',
+    title: 'Projectos Sob Medida',
     img: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&auto=format&fit=crop&q=80',
-    desc: 'A URBAN desenvolve qualquer solução metálica personalizada para as suas necessidades específicas. Da conceção ao fabrico, garantimos rigor técnico, qualidade de materiais e prazo cumprido.',
+    desc: 'A URBAN desenvolve qualquer solução metálica personalizada para as suas necessidades específicas. Da concepção ao fabrico, garantimos rigor técnico, qualidade de materiais e prazo cumprido.',
     specs: [
       ['Escopo', 'Totalmente personalizado'],
-      ['Processo', 'Conceção → Fabrico → Entrega'],
+      ['Processo', 'Concepção → Fabrico → Entrega'],
       ['Materiais', 'Aço carbono, inox, galvanizado'],
       ['Setores', 'Industrial, municipal, petrolífero'],
       ['Orçamento', 'Solicite uma proposta gratuita'],
@@ -2836,6 +2920,113 @@ document.addEventListener('keydown', e => {
     g.style.gridTemplateColumns = window.innerWidth < 900 ? '1fr' : '1fr 1fr';
   });
 })();
+
+/* ── CAROUSEL ── */
+document.addEventListener('DOMContentLoaded', function() {
+  const track = document.getElementById('carouselTrack');
+  const dotsEl = document.getElementById('carouselDots');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  if (!track) return;
+
+  let current = 0;
+  const cards = Array.from(track.querySelectorAll('.porto-card'));
+  const total = cards.length;
+  const GAP = 20;
+
+  function getVisible() {
+    if (window.innerWidth <= 600) return 1;
+    if (window.innerWidth <= 900) return 2;
+    return 3;
+  }
+
+  function getCardWidth() {
+    const vis = getVisible();
+    const wrap = track.parentElement;
+    return (wrap.offsetWidth - GAP * (vis - 1)) / vis;
+  }
+
+  function buildDots() {
+    if (!dotsEl) return;
+    dotsEl.innerHTML = '';
+    const pages = total - getVisible() + 1;
+    for (let i = 0; i < pages; i++) {
+      const d = document.createElement('button');
+      d.className = 'carousel-dot' + (i === current ? ' active' : '');
+      d.onclick = () => goTo(i);
+      dotsEl.appendChild(d);
+    }
+  }
+
+  function setCardSizes() {
+    const w = getCardWidth();
+    cards.forEach(c => {
+      c.style.flex = '0 0 ' + w + 'px';
+      c.style.width = w + 'px';
+    });
+  }
+
+  function goTo(idx) {
+    const vis = getVisible();
+    const maxIdx = Math.max(0, total - vis);
+    current = Math.max(0, Math.min(idx, maxIdx));
+    const w = getCardWidth();
+    track.style.transform = `translateX(-${current * (w + GAP)}px)`;
+    if (prevBtn) prevBtn.disabled = current === 0;
+    if (nextBtn) nextBtn.disabled = current >= maxIdx;
+    if (dotsEl) dotsEl.querySelectorAll('.carousel-dot').forEach((d, i) => d.classList.toggle('active', i === current));
+  }
+
+  window.carouselMove = function(dir) { goTo(current + dir); };
+
+  function init() {
+    setCardSizes();
+    buildDots();
+    goTo(0);
+  }
+
+  init();
+
+  window.addEventListener('resize', () => {
+    current = 0;
+    setCardSizes();
+    buildDots();
+    goTo(0);
+  });
+
+  // Touch/swipe support
+  let startX = 0;
+  track.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+  track.addEventListener('touchend', e => {
+    const diff = startX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) carouselMove(diff > 0 ? 1 : -1);
+  });
+
+  // ── AUTO-PLAY: avança automaticamente sem interacção humana ──
+  let autoInterval = setInterval(autoPlay, 3500);
+
+  function autoPlay() {
+    const vis = getVisible();
+    const maxIdx = Math.max(0, total - vis);
+    const next = current >= maxIdx ? 0 : current + 1;
+    goTo(next);
+  }
+
+  // Pausa brevemente se o utilizador interagir manualmente
+  const originalMove = window.carouselMove;
+  window.carouselMove = function(dir) {
+    clearInterval(autoInterval);
+    originalMove(dir);
+    autoInterval = setInterval(autoPlay, 3500);
+  };
+
+  // Pausa ao passar o rato por cima
+  track.addEventListener('mouseenter', () => clearInterval(autoInterval));
+  track.addEventListener('mouseleave', () => {
+    clearInterval(autoInterval);
+    autoInterval = setInterval(autoPlay, 3500);
+  });
+});
 </script>
 </body>
 </html>
